@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zhengxiha.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="注：函数、方法都可以看做是用例 一、pytest相关插件在项目中新建一个requirements.txt,输入下面的插件，然后命令行输入pip install -r requirements.txt即可一次性安装 1234567pytestpytest-htmlpytest-xdistpytest-orderingpytest-rerunfailuresallure-pytest   pytes">
+<meta property="og:type" content="article">
+<meta property="og:title" content="pytest基础">
+<meta property="og:url" content="http://zhengxiha.github.io/2023/09/19/pytest%E5%9F%BA%E7%A1%80/index.html">
+<meta property="og:site_name" content="xiha&#39;s blog">
+<meta property="og:description" content="注：函数、方法都可以看做是用例 一、pytest相关插件在项目中新建一个requirements.txt,输入下面的插件，然后命令行输入pip install -r requirements.txt即可一次性安装 1234567pytestpytest-htmlpytest-xdistpytest-orderingpytest-rerunfailuresallure-pytest   pytes">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/25987745/1658319549293-cf5b3f71-eac9-4b8e-9ba2-fb96ce898eb8.png#averageHue=%235e5b33&clientId=u430eaf21-9cf6-4&from=paste&height=246&id=u7f1a3547&originHeight=307&originWidth=524&originalType=binary&ratio=1&rotation=0&showTitle=false&size=24470&status=done&style=none&taskId=u81c7100e-91f1-4113-9292-d42ad54399e&title=&width=419.2">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/25987745/1658315976679-80053acd-e615-475a-97c9-7290abc31b70.png#averageHue=%23837455&clientId=u430eaf21-9cf6-4&from=paste&height=522&id=uda685f0e&originHeight=653&originWidth=970&originalType=binary&ratio=1&rotation=0&showTitle=false&size=77450&status=done&style=none&taskId=u77580468-2ee1-481c-9b9b-c4fce7a86fa&title=&width=776">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/25987745/1663053901608-f62292e1-ef68-45b5-bc8e-6193d411f59e.png#averageHue=%236a6543&clientId=u97b14d32-0d0d-4&from=paste&height=298&id=u8bd68124&originHeight=298&originWidth=484&originalType=binary&ratio=1&rotation=0&showTitle=false&size=38712&status=done&style=none&taskId=ue34c6879-2282-416f-8342-fc5fa2719a6&title=&width=484">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/25987745/1658322989916-1a8670ed-4605-4de2-9aee-802e55418dfe.png#averageHue=%237f6f4b&clientId=u430eaf21-9cf6-4&from=paste&height=682&id=u8114949d&originHeight=853&originWidth=1472&originalType=binary&ratio=1&rotation=0&showTitle=false&size=164304&status=done&style=none&taskId=uda2ea360-e600-423b-94c3-6ca21c6dc0f&title=&width=1177.6">
+<meta property="article:published_time" content="2023-09-19T09:20:15.000Z">
+<meta property="article:modified_time" content="2024-05-30T08:52:00.854Z">
+<meta property="article:author" content="xiha">
+<meta property="article:tag" content="pytest">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.nlark.com/yuque/0/2022/png/25987745/1658319549293-cf5b3f71-eac9-4b8e-9ba2-fb96ce898eb8.png#averageHue=%235e5b33&clientId=u430eaf21-9cf6-4&from=paste&height=246&id=u7f1a3547&originHeight=307&originWidth=524&originalType=binary&ratio=1&rotation=0&showTitle=false&size=24470&status=done&style=none&taskId=u81c7100e-91f1-4113-9292-d42ad54399e&title=&width=419.2">
+
+<link rel="canonical" href="http://zhengxiha.github.io/2023/09/19/pytest%E5%9F%BA%E7%A1%80/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>pytest基础 | xiha's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">xiha's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://zhengxiha.github.io/2023/09/19/pytest%E5%9F%BA%E7%A1%80/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="xiha">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="xiha's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          pytest基础
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-09-19 17:20:15" itemprop="dateCreated datePublished" datetime="2023-09-19T17:20:15+08:00">2023-09-19</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" itemprop="url" rel="index"><span itemprop="name">自动化测试</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><a name="NKjZm"></a></p>
+<h1 id="注：函数、方法都可以看做是用例"><a href="#注：函数、方法都可以看做是用例" class="headerlink" title="注：函数、方法都可以看做是用例"></a>注：函数、方法都可以看做是用例</h1><p><a name="Tvl9E"></a></p>
+<h1 id="一、pytest相关插件"><a href="#一、pytest相关插件" class="headerlink" title="一、pytest相关插件"></a>一、pytest相关插件</h1><p>在项目中新建一个requirements.txt,输入下面的插件，然后命令行输入<strong>pip install -r requirements.txt</strong>即可一次性安装</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">pytest</span><br><span class="line">pytest-html</span><br><span class="line">pytest-xdist</span><br><span class="line">pytest-ordering</span><br><span class="line">pytest-rerunfailures</span><br><span class="line">allure-pytest</span><br><span class="line">  </span><br></pre></td></tr></table></figure>
+<p>pytest-html—生成html格式的自动化测试报告<br />pytest-xdist—测试用例分布式执行。多CPU分发<br />pytest-ordering—用于改变测试用例的执行顺序<br />pytest-rerunfailures—用例失败后重跑<br />allure-pytest—–生成美观的测试报告<br /><img src="https://cdn.nlark.com/yuque/0/2022/png/25987745/1658319549293-cf5b3f71-eac9-4b8e-9ba2-fb96ce898eb8.png#averageHue=%235e5b33&clientId=u430eaf21-9cf6-4&from=paste&height=246&id=u7f1a3547&originHeight=307&originWidth=524&originalType=binary&ratio=1&rotation=0&showTitle=false&size=24470&status=done&style=none&taskId=u81c7100e-91f1-4113-9292-d42ad54399e&title=&width=419.2" alt="image.png"><br><a name="TpHIF"></a></p>
+<h1 id="二、运行方式"><a href="#二、运行方式" class="headerlink" title="二、运行方式"></a>二、运行方式</h1><p><a name="CRpZ4"></a></p>
+<h2 id="（1）主函数运行—pytest-main"><a href="#（1）主函数运行—pytest-main" class="headerlink" title="（1）主函数运行—pytest.main()"></a>（1）主函数运行—pytest.main()</h2><p>参数-s：表示 输出调试信息，包括print打印的信息，如果不加-s,print的信息无法输出</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">注：默认执行当前目录中所有以test_开头的用例，即使不在同一个模块文件内</span><br><span class="line"><span class="keyword">if</span> __name__=<span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line"><span class="comment">#1、不加参数 </span></span><br><span class="line">    pytest.<span class="title function_ invoke__">main</span>()</span><br><span class="line"><span class="comment">#2、加参数</span></span><br><span class="line">    pytest.<span class="title function_ invoke__">main</span>([<span class="string">&#x27;-s&#x27;</span>])</span><br><span class="line"><span class="comment">#3、执行指定用例</span></span><br><span class="line">    pytest.<span class="title function_ invoke__">main</span>([<span class="string">&#x27;文件名.py&#x27;</span>])</span><br><span class="line"><span class="comment">#4、参数+指定用例</span></span><br><span class="line">    pytest.<span class="title function_ invoke__">main</span>([<span class="string">&#x27;-vs&#x27;</span>,<span class="string">&#x27;文件名.py&#x27;</span>])</span><br><span class="line">    <span class="comment">#开多线程 pytest.main([&#x27;-vs&#x27;,&#x27;./testcase&#x27;,&#x27;-n=2&#x27;])，前提是安装了pytest-xdist</span></span><br><span class="line"><span class="comment">#5、执行指定目录下的用例,例如项目根目录下的testcase内的所有用例</span></span><br><span class="line">    pytest.<span class="title function_ invoke__">main</span>([<span class="string">&#x27;-vs&#x27;</span>,<span class="string">&#x27;./testcase&#x27;</span>])</span><br><span class="line"><span class="comment">#6、执行</span></span><br><span class="line">    pytest.<span class="title function_ invoke__">main</span>([<span class="string">&#x27;-vs&#x27;</span>],<span class="string">&#x27;./目录/文件名.py::类名::用例名&#x27;</span>)</span><br><span class="line">    <span class="comment">#执行函数也一样</span></span><br></pre></td></tr></table></figure>
+<p>运行：1、运行根目录下的all.py，执行了项目中的所有用例，演示项目中有两个测试用例模块，共3个用例<img src="https://cdn.nlark.com/yuque/0/2022/png/25987745/1658315976679-80053acd-e615-475a-97c9-7290abc31b70.png#averageHue=%23837455&clientId=u430eaf21-9cf6-4&from=paste&height=522&id=uda685f0e&originHeight=653&originWidth=970&originalType=binary&ratio=1&rotation=0&showTitle=false&size=77450&status=done&style=none&taskId=u77580468-2ee1-481c-9b9b-c4fce7a86fa&title=&width=776" alt="image.png"><br><a name="wKtlR"></a></p>
+<h2 id="（2）命令行模式"><a href="#（2）命令行模式" class="headerlink" title="（2）命令行模式"></a>（2）命令行模式</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>、运行所有：pytest</span><br><span class="line"><span class="number">2</span>、指定模块：pytest -vs 文件名.py</span><br><span class="line"><span class="number">3</span>、指定目录：pytest -vs ./目录名</span><br></pre></td></tr></table></figure>
+<p><a name="Lq0uI"></a></p>
+<h2 id="3-pytest-ini"><a href="#3-pytest-ini" class="headerlink" title="(3)pytest.ini"></a>(3)pytest.ini</h2><p>pytest.ini是pytest单元测试框架的核心配置文件–文件中不能使用任何中文符号（也可以用，最好少用）</p>
+<p>a、位置：一般放项目的根目录<br />b、编码：ANSI，可以使用notepad++修改编码格式<br />c、作用：改变pytest默认行为<br />d、不管是主函数还是命令行运行，都会读取这个配置文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[pytest]</span><br><span class="line">注释符号用分号；</span><br><span class="line">;命令行参数，用空格分隔</span><br><span class="line">addopts = -v -s --reruns 1 --html=report.html</span><br><span class="line">; 读取测试用例的起始文件夹，多个路径用空格分隔。注意：这些目录下不能出现相同文件名，否则会报错</span><br><span class="line">testpaths = ./testcase</span><br><span class="line">; 配置测试搜索的模块文件名称</span><br><span class="line">python_files =  test_*.py</span><br><span class="line">; 配置测试搜索的模块文件名称</span><br><span class="line">python_classes=Test*</span><br><span class="line">python_functions=test</span><br><span class="line"></span><br><span class="line">;标记分组参数</span><br><span class="line">markers=</span><br><span class="line">    smoke:冒烟用例</span><br><span class="line">    usermanage:用户管理模块</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.nlark.com/yuque/0/2022/png/25987745/1663053901608-f62292e1-ef68-45b5-bc8e-6193d411f59e.png#averageHue=%236a6543&clientId=u97b14d32-0d0d-4&from=paste&height=298&id=u8bd68124&originHeight=298&originWidth=484&originalType=binary&ratio=1&rotation=0&showTitle=false&size=38712&status=done&style=none&taskId=ue34c6879-2282-416f-8342-fc5fa2719a6&title=&width=484" alt="image.png"><br><a name="ULq7Q"></a></p>
+<h1 id="二、参数详解："><a href="#二、参数详解：" class="headerlink" title="二、参数详解："></a>二、参数详解：</h1><p><strong>-s</strong>:显示输出调试信息，包括print打印的信息<br /><strong>-v</strong>:显示理详细的信息<br /><strong>-n</strong>：支持多线程或者分布式运行测试用例。<br />如pytest -vs .&#x2F;testcase&#x2F;test.py -n 2  ——&gt;这一行就是开了两个线程用来执行testcase&#x2F;test.py内的所有用例，如果仅一个线程执行3个用例需要9秒，那么用两个线程来执行大约用6秒（即一个线程跑3次，两个线程只跑2次）<br /><strong>–reruns num</strong>:失败用例重跑(需安装pytest插件)</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#当用例执行失败，再重新多跑2次</span></span><br><span class="line"><span class="number">1</span>、main方式</span><br><span class="line">  pytest.<span class="title function_ invoke__">main</span>([<span class="string">&#x27;-vs&#x27;</span>,<span class="string">&#x27;./testcase&#x27;</span>,<span class="string">&#x27;--reruns=2&#x27;</span>])     </span><br><span class="line"><span class="number">2</span>、命令行</span><br><span class="line">  pytest -vs ./testcase --reruns <span class="number">2</span></span><br></pre></td></tr></table></figure>
+<p><strong>-x</strong>:只要一个用例报错，测试停止<br />**–maxfail&#x3D;2 **:出现两个用例失败则停止</p>
+<p>三、用例执行顺序 <br />1、默认用例从上到下执行<br />2、改变顺序<br />第一种–使用mark标记：@pytest.mark.run(order&#x3D;num)<br />第二种–使用pytest.ini<br />a、pytest.ini中设置分组<br />b、用例前加上@pytest.mark.分组名<br />c、执行pytest -v -m “smoke”<br /><img src="https://cdn.nlark.com/yuque/0/2022/png/25987745/1658322989916-1a8670ed-4605-4de2-9aee-802e55418dfe.png#averageHue=%237f6f4b&clientId=u430eaf21-9cf6-4&from=paste&height=682&id=u8114949d&originHeight=853&originWidth=1472&originalType=binary&ratio=1&rotation=0&showTitle=false&size=164304&status=done&style=none&taskId=uda2ea360-e600-423b-94c3-6ca21c6dc0f&title=&width=1177.6" alt="image.png"></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/pytest/" rel="tag"># pytest</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/07/17/%E6%80%A7%E8%83%BD%E7%9B%91%E6%8E%A7%E5%B7%A5%E5%85%B7%EF%BC%9Aprometheus+grafana/" rel="prev" title="性能监控工具：prometheus+grafana">
+      <i class="fa fa-chevron-left"></i> 性能监控工具：prometheus+grafana
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/11/28/%E5%8A%9F%E8%83%BD%E8%AE%BE%E8%AE%A1/" rel="next" title="自动化测试框架设计">
+      自动化测试框架设计 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B3%A8%EF%BC%9A%E5%87%BD%E6%95%B0%E3%80%81%E6%96%B9%E6%B3%95%E9%83%BD%E5%8F%AF%E4%BB%A5%E7%9C%8B%E5%81%9A%E6%98%AF%E7%94%A8%E4%BE%8B"><span class="nav-number">1.</span> <span class="nav-text">注：函数、方法都可以看做是用例</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E3%80%81pytest%E7%9B%B8%E5%85%B3%E6%8F%92%E4%BB%B6"><span class="nav-number">2.</span> <span class="nav-text">一、pytest相关插件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E8%BF%90%E8%A1%8C%E6%96%B9%E5%BC%8F"><span class="nav-number">3.</span> <span class="nav-text">二、运行方式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%EF%BC%881%EF%BC%89%E4%B8%BB%E5%87%BD%E6%95%B0%E8%BF%90%E8%A1%8C%E2%80%94pytest-main"><span class="nav-number">3.1.</span> <span class="nav-text">（1）主函数运行—pytest.main()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EF%BC%882%EF%BC%89%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%A8%A1%E5%BC%8F"><span class="nav-number">3.2.</span> <span class="nav-text">（2）命令行模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-pytest-ini"><span class="nav-number">3.3.</span> <span class="nav-text">(3)pytest.ini</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%8F%82%E6%95%B0%E8%AF%A6%E8%A7%A3%EF%BC%9A"><span class="nav-number">4.</span> <span class="nav-text">二、参数详解：</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">xiha</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        <!--
+-->
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xiha</span>
+</div>
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+-->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
