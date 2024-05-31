@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zhengxiha.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="cat:由第一行开始显示文件的全部内容（直接显示，不可分页，适用于查看内容少的文件）。tac:从最后一行开始显示，是cat的倒写形式。nl:显示时输出行号more:一页页地显示打印在终端，（b显示上一页，空格显示下一页），翻到最后一页直接跳出文件less:与more类似，但不打印在终端，支持翻页,适用内容多的文件head:只看头几行tail:只看末尾几行od:以二进制的方式读取文件内容  1、直接">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux-查看文件">
+<meta property="og:url" content="http://zhengxiha.github.io/2023/03/24/%E6%9F%A5%E7%9C%8B%E6%96%87%E4%BB%B6/index.html">
+<meta property="og:site_name" content="xiha&#39;s blog">
+<meta property="og:description" content="cat:由第一行开始显示文件的全部内容（直接显示，不可分页，适用于查看内容少的文件）。tac:从最后一行开始显示，是cat的倒写形式。nl:显示时输出行号more:一页页地显示打印在终端，（b显示上一页，空格显示下一页），翻到最后一页直接跳出文件less:与more类似，但不打印在终端，支持翻页,适用内容多的文件head:只看头几行tail:只看末尾几行od:以二进制的方式读取文件内容  1、直接">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/25987745/1646654882082-00f07ff0-464b-4ee4-8e55-b0c25ec3aaa0.png#averageHue=%23f8f4f4&clientId=u581b7dae-b671-4&from=paste&height=431&id=ue8d693f0&originHeight=656&originWidth=606&originalType=binary&ratio=1&rotation=0&showTitle=false&size=71448&status=done&style=none&taskId=u51ffe886-0b88-4f1d-b0db-dd4b72efe50&title=&width=398">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/25987745/1646654748314-e9898686-c2e4-44ee-b984-ccb1edf04fce.png#averageHue=%23fdf6f5&clientId=u581b7dae-b671-4&from=paste&height=242&id=u4cfc8f7a&originHeight=270&originWidth=520&originalType=binary&ratio=1&rotation=0&showTitle=false&size=19828&status=done&style=none&taskId=u0ccdbc68-0fcf-420e-8a8f-db8995ea468&title=&width=467">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/25987745/1646655385328-20dd8096-aa89-475e-a795-4a5d14554f0c.png#averageHue=%23fefefe&clientId=u581b7dae-b671-4&from=paste&height=151&id=ufe077982&originHeight=153&originWidth=508&originalType=binary&ratio=1&rotation=0&showTitle=false&size=5466&status=done&style=none&taskId=u165108b5-6431-42ee-9ca8-ab47771166f&title=&width=500">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/25987745/1646655491866-0633a99f-e9ae-4846-b54b-8c1ebed8d0a7.png#averageHue=%23fdfdfd&clientId=u581b7dae-b671-4&from=paste&height=335&id=ub8bfa4c4&originHeight=409&originWidth=519&originalType=binary&ratio=1&rotation=0&showTitle=false&size=15175&status=done&style=none&taskId=u690d65ae-7191-4025-a9f8-6d4003ae64d&title=&width=425.5">
+<meta property="article:published_time" content="2023-03-24T09:20:15.000Z">
+<meta property="article:modified_time" content="2024-05-31T04:27:29.515Z">
+<meta property="article:author" content="xiha">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.nlark.com/yuque/0/2022/png/25987745/1646654882082-00f07ff0-464b-4ee4-8e55-b0c25ec3aaa0.png#averageHue=%23f8f4f4&clientId=u581b7dae-b671-4&from=paste&height=431&id=ue8d693f0&originHeight=656&originWidth=606&originalType=binary&ratio=1&rotation=0&showTitle=false&size=71448&status=done&style=none&taskId=u51ffe886-0b88-4f1d-b0db-dd4b72efe50&title=&width=398">
+
+<link rel="canonical" href="http://zhengxiha.github.io/2023/03/24/%E6%9F%A5%E7%9C%8B%E6%96%87%E4%BB%B6/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>linux-查看文件 | xiha's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">xiha's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://zhengxiha.github.io/2023/03/24/%E6%9F%A5%E7%9C%8B%E6%96%87%E4%BB%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="xiha">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="xiha's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          linux-查看文件
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-03-24 17:20:15" itemprop="dateCreated datePublished" datetime="2023-03-24T17:20:15+08:00">2023-03-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%BD%AF%E4%BB%B6%E6%B5%8B%E8%AF%95/" itemprop="url" rel="index"><span itemprop="name">软件测试</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><strong>cat:由第一行开始显示文件的全部内容（直接显示，不可分页，适用于查看内容少的文件）。</strong><br /><strong>tac:从最后一行开始显示，是cat的倒写形式。</strong><br /><strong>nl:显示时输出行号</strong><br /><strong>more:一页页地显示打印在终端，（b显示上一页，空格显示下一页），翻到最后一页直接跳出文件</strong><br /><strong>less:与more类似，但不打印在终端，支持翻页,适用内容多的文件</strong><br /><strong>head:只看头几行</strong><br /><strong>tail:只看末尾几行</strong><br /><strong>od:以二进制的方式读取文件内容</strong></p>
+<p><a name="TV4xD"></a></p>
+<h3 id="1、直接查看文件内容cat、tac、nl"><a href="#1、直接查看文件内容cat、tac、nl" class="headerlink" title="1、直接查看文件内容cat、tac、nl"></a>1、直接查看文件内容cat、tac、nl</h3><p><strong>cat [参数] [文件]</strong><br />参数：</p>
+<table>
+<thead>
+<tr>
+<th>-b</th>
+<th>忽略空白行显示行号</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-n</td>
+<td>空白行也显示行号</td>
+</tr>
+</tbody></table>
+<p><strong>tac [参数] [文件] 从后往前依次打印</strong><br /><strong>nl [参数] [文件] 添加行号显示</strong><br />参数：</p>
+<table>
+<thead>
+<tr>
+<th>-b<br />(指定行号是否要忽略空白行)</th>
+<th>a</th>
+<th>空白行也显示行号（类似cat -n）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td></td>
+<td>t</td>
+<td>空白行不显示行号，即跳过空白行继续往下计行数（默认值）</td>
+</tr>
+<tr>
+<td>-n<br />(列出行号表示 的方法)</td>
+<td>ln</td>
+<td>行号显示在最左方</td>
+</tr>
+<tr>
+<td></td>
+<td>rn</td>
+<td>行号在自己字段的最右方显示，且不加0</td>
+</tr>
+<tr>
+<td></td>
+<td>rz</td>
+<td>行号在自己字段的最右方显示，且加0</td>
+</tr>
+</tbody></table>
+<p><a name="WATZL"></a></p>
+<h2 id="2、可翻页查看more、less"><a href="#2、可翻页查看more、less" class="headerlink" title="2、可翻页查看more、less"></a>2、可翻页查看more、less</h2><p><strong>more</strong>:一页一页地翻动，<br />运行过程中的操作：<br />空格键：下一页<br /><strong>b</strong>:上一页，对文件有用，对管道无用<br /><strong>Enter</strong>：向下滚动一行<br /><strong>&#x2F;字符串</strong>：<strong>向下</strong>查询“字符串”这个关键字<br /><strong>:f</strong>：显示出文件名及目前显示的行数<br />q:退出</p>
+<p><strong>less:less用用法比more更加弹性，拥有的查询功能更多；可向上查询，向下查询</strong><br /><strong>操作：</strong><br /><strong>空格键     ：下一页</strong><br /><strong>b 	        ：上一页</strong><br /><strong>&#x2F;字符串   ：向下查询“字符串”</strong><br /><strong>？字符串 ：向上查询“字符串”</strong><br /><strong>n		:重复前一个查询（与&#x2F;或？有关）</strong><br /><strong>N  		:反向重复前一个查询（与&#x2F;或？有关）</strong><br /><strong>q		:退出</strong><br><a name="DLXmM"></a></p>
+<h2 id="3、数据选取head、tail"><a href="#3、数据选取head、tail" class="headerlink" title="3、数据选取head、tail"></a>3、数据选取head、tail</h2><p>head和tail都是以“行”为单位进行数据选取的<br /><strong>head [参数] [文件]：查看文件头几行的内容，默认查看前10行</strong><br />参数：**-n &lt;数字&gt;**</p>
+<p><strong>tail [参数] [文件]<strong>：查看文件后面几行的内容，默认查看文件后10行的内容<br />参数：<br /></strong>    -n &lt;数字&gt;</strong> ，代表显示几行<br />   ** -f** 表示持续检测文件，按下Ctrl+c结束读取（我的是**-F**才能实时刷新，centos7）<br />   ** -c &lt;数字&gt;**，表示显示的字节数<br />    -q 不显示处理信息<br />    -v 显示详细的处理信息<br />    –pid&#x3D;PID 与-f合用,表示在进程ID,PID死掉之后结束<br />    -q, –quiet, –silent 从不输出给出文件名的首部<br />    -s, –sleep-interval&#x3D;S 与-f合用,表示在每次反复的间隔休眠S秒<br><a name="nnPqu"></a></p>
+<h2 id="4、非纯文本文件：od"><a href="#4、非纯文本文件：od" class="headerlink" title="4、非纯文本文件：od"></a>4、非纯文本文件：od</h2><p>od [-t 类型]  [文件]<br />类型：<br />a:<br />c:<br />d[size]:利用十进制(decimal)输出数据，每个整数占用size bytes;<br />f[size]:利用浮点数(decimal)输出数据，每个整数占用size bytes;<br />o[size]:利用八进制(decimal)输出数据，每个整数占用size bytes;<br />x[size]:利用十六进制(decimal)输出数据，每个整数占用size bytes;</p>
+<p>实操：<br /><img src="https://cdn.nlark.com/yuque/0/2022/png/25987745/1646654882082-00f07ff0-464b-4ee4-8e55-b0c25ec3aaa0.png#averageHue=%23f8f4f4&clientId=u581b7dae-b671-4&from=paste&height=431&id=ue8d693f0&originHeight=656&originWidth=606&originalType=binary&ratio=1&rotation=0&showTitle=false&size=71448&status=done&style=none&taskId=u51ffe886-0b88-4f1d-b0db-dd4b72efe50&title=&width=398" alt="image.png"></p>
+<p>**tail -c 10 test.txt **<br />注：数字、字母、空格占1个字节<br /><img src="https://cdn.nlark.com/yuque/0/2022/png/25987745/1646654748314-e9898686-c2e4-44ee-b984-ccb1edf04fce.png#averageHue=%23fdf6f5&clientId=u581b7dae-b671-4&from=paste&height=242&id=u4cfc8f7a&originHeight=270&originWidth=520&originalType=binary&ratio=1&rotation=0&showTitle=false&size=19828&status=done&style=none&taskId=u0ccdbc68-0fcf-420e-8a8f-db8995ea468&title=&width=467" alt="image.png"><br /><strong>tail -n +20 test.txt</strong> （注意有个+号，表示正序第20行开始到结尾的内容）<br /><img src="https://cdn.nlark.com/yuque/0/2022/png/25987745/1646655385328-20dd8096-aa89-475e-a795-4a5d14554f0c.png#averageHue=%23fefefe&clientId=u581b7dae-b671-4&from=paste&height=151&id=ufe077982&originHeight=153&originWidth=508&originalType=binary&ratio=1&rotation=0&showTitle=false&size=5466&status=done&style=none&taskId=u165108b5-6431-42ee-9ca8-ab47771166f&title=&width=500" alt="image.png"><br /><strong>tail -n 20 test.txt</strong> （倒数20行的内容）<br /><img src="https://cdn.nlark.com/yuque/0/2022/png/25987745/1646655491866-0633a99f-e9ae-4846-b54b-8c1ebed8d0a7.png#averageHue=%23fdfdfd&clientId=u581b7dae-b671-4&from=paste&height=335&id=ub8bfa4c4&originHeight=409&originWidth=519&originalType=binary&ratio=1&rotation=0&showTitle=false&size=15175&status=done&style=none&taskId=u690d65ae-7191-4025-a9f8-6d4003ae64d&title=&width=425.5" alt="image.png"></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Linux/" rel="tag"># Linux</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/02/27/%E8%BD%AF%E4%BB%B6%E6%80%A7%E8%83%BD%E7%9A%84%E5%87%A0%E4%B8%AA%E4%B8%BB%E8%A6%81%E6%9C%AF%E8%AF%AD/" rel="prev" title="软件性能的几个主要术语">
+      <i class="fa fa-chevron-left"></i> 软件性能的几个主要术语
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/04/28/python%E5%A4%9A%E7%89%88%E6%9C%AC%E5%85%B1%E5%AD%98/" rel="next" title="python多版本共存">
+      python多版本共存 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81%E7%9B%B4%E6%8E%A5%E6%9F%A5%E7%9C%8B%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9cat%E3%80%81tac%E3%80%81nl"><span class="nav-number">1.</span> <span class="nav-text">1、直接查看文件内容cat、tac、nl</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2%E3%80%81%E5%8F%AF%E7%BF%BB%E9%A1%B5%E6%9F%A5%E7%9C%8Bmore%E3%80%81less"><span class="nav-number"></span> <span class="nav-text">2、可翻页查看more、less</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3%E3%80%81%E6%95%B0%E6%8D%AE%E9%80%89%E5%8F%96head%E3%80%81tail"><span class="nav-number"></span> <span class="nav-text">3、数据选取head、tail</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4%E3%80%81%E9%9D%9E%E7%BA%AF%E6%96%87%E6%9C%AC%E6%96%87%E4%BB%B6%EF%BC%9Aod"><span class="nav-number"></span> <span class="nav-text">4、非纯文本文件：od</span></a></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">xiha</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        <!--
+-->
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xiha</span>
+</div>
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+-->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
