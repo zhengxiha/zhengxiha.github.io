@@ -83,6 +83,51 @@
       </tags>
   </entry>
   <entry>
+    <title>arp攻击</title>
+    <url>/2023/07/22/arp%E6%94%BB%E5%87%BB/</url>
+    <content><![CDATA[<p>需解决问题：</p>
+<blockquote>
+<p>1、arpsoof是什么东西？<br>2、arp攻击、arp欺骗、arp缓存表是什么？<br>3、反向欺骗是什么？<br>4、如何用arp攻击实现断网？<br>5、如何做arp攻击防御？</p>
+</blockquote>
+<p><a name="S81XL"></a></p>
+<h3 id="1、arpsoof是什么东西？"><a href="#1、arpsoof是什么东西？" class="headerlink" title="1、arpsoof是什么东西？"></a>1、arpsoof是什么东西？</h3><blockquote>
+<p>arpsoof是一款进行arp欺骗的工具，攻击者通过<strong>修改受害者arp缓存</strong>，将网关的MAC替换为攻击者的MAC，后续攻击者可截获受害者的所有发送和接收的所有数据包</p>
+</blockquote>
+<p><img src="/images/img.png" alt="img"></p>
+<p><a name="cLZMD"></a></p>
+<h3 id="2、arp攻击、arp欺骗、arp缓存表是什么？"><a href="#2、arp攻击、arp欺骗、arp缓存表是什么？" class="headerlink" title="2、arp攻击、arp欺骗、arp缓存表是什么？"></a>2、arp攻击、arp欺骗、arp缓存表是什么？</h3><p>arp缓存表：</p>
+<blockquote>
+<p>每台主机、网关都有一个ARP缓存表<br>ARP缓存表内记录了其他主机或网关的IP地址与MAC地址的对应关系<br>表中的每条记录实际上就是一个IP与MAC地址对，可以是静态的，也可以是动态的；<br>静态的记录不能被ARP应答包修改，动态的可被ARP应答包修改</p>
+</blockquote>
+<p>arp攻击：无法通信<br />arp欺骗：窃取数据</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">相关命令：</span><br><span class="line">arp -s 增加</span><br><span class="line">arp -d 删除</span><br><span class="line">arp -a 查看缓存表  <span class="comment">#这个在windows中可以查看是静态还是动态，linux中只有对应的记录</span></span><br><span class="line">netsh interface ipv4 show neighbors   <span class="comment">#windows中查看缓存表</span></span><br><span class="line">netsh interface ipv4 <span class="built_in">set</span> neighbors 网卡<span class="built_in">id</span> 目标ip 目标mac  <span class="comment">#绑定arp</span></span><br></pre></td></tr></table></figure>
+<p><a name="SUXku"></a></p>
+<h3 id="3、反向欺骗是什么？"><a href="#3、反向欺骗是什么？" class="headerlink" title="3、反向欺骗是什么？"></a>3、反向欺骗是什么？</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 正向欺骗</span></span><br><span class="line">arpsoof -i 网卡 -t 目标主机ip  目标主机网关ip</span><br><span class="line"><span class="comment"># 反射欺骗</span></span><br><span class="line">arpsoof -i 网卡 -t 目标主机网关ip  目标主机ip</span><br></pre></td></tr></table></figure>
+<p><img src="/images/img_1.png" alt="img_1"><img src="/images/img_2.png" alt="img_2"><br><a name="Q1DCO"></a></p>
+<h3 id="4、如何用arp攻击实现断网？"><a href="#4、如何用arp攻击实现断网？" class="headerlink" title="4、如何用arp攻击实现断网？"></a>4、如何用arp攻击实现断网？</h3><p>开启arp攻击后不开启路由转发，这样目标机的流量只发到攻击者的主机，不会转发到网关，也就无法得到回应，实现断网</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 两种命令 其中1表示开启 0表示关闭</span></span><br><span class="line"><span class="comment"># 第一种</span></span><br><span class="line">sysctl -w net.ipv4.ip_forward=<span class="number">1</span></span><br><span class="line"><span class="comment"># 第二种</span></span><br><span class="line">echo <span class="number">1</span> &gt; /proc/sys/net/ipv4/ip_forward   </span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看路由转发状态</span></span><br><span class="line">cat /proc/sys/net/ipv4/ip_forward </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><a name="weMKu"></a></p>
+<h3 id="5、如何做arp攻击防御？"><a href="#5、如何做arp攻击防御？" class="headerlink" title="5、如何做arp攻击防御？"></a>5、如何做arp攻击防御？</h3><p>法一：将网关的mac地址静态绑定（不太现实，必须主机和网关都绑定）<br />方法：</p>
+<blockquote>
+<p>1、查看网络接口信息</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">netsh interface ipv4 show interface</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>2、将网卡绑定</p>
+</blockquote>
+<blockquote>
+<p><strong>（1）静态绑定ARP，真实环境不太现实 必须在主机和网关双向绑定</strong><br>        —–主机上绑定—–<br>        先查看网卡的id<br>        netsh interface ipv4 show neighbors<br>        再进行绑定<br>        语法：netsh interface ipv4 set neighbors 网卡id  目标主机ip地址  目标主机mac地址<br>        示例：netsh interface ipv4 set neighbors 11 10.0.0.178 00-1a-e2-df-07-41<br>        如果是xp系统用：arp  -s  目标主机ip地址  目标主机mac地址<br>     —–网关路由器上绑定—–<br>        语法：Router(config)#arp 目的主机ip地址 目标主机mac地址 arpa 接口<br>        示例：Router(config)#arp 10.0.0.95 0013.240a.b219 arpa f0&#x2F;0<br>        —–交换机上绑定—–<br>        语法：Switch(config)#arp 目的主机ip地址 目标主机mac地址 arpa 接口<br>        示例：Switch(config)#arp 10.0.0.12 90fb.a695.4445 arpa f0&#x2F;2<br>    查看arp缓存表：arp  -a<br>    清除arp缓存表：arp  -d<br><strong>（2）安装ARP防火墙，或企业级防火墙（自带ARP防火墙功能）</strong><br>原文链接：<a href="https://blog.csdn.net/lzl10211345/article/details/126882928">https://blog.csdn.net/lzl10211345/article/details/126882928</a></p>
+</blockquote>
+<p>法二：安装ARP防火墙，或企业级防火墙（自带ARP防火墙功能）</p>
+]]></content>
+      <categories>
+        <category>渗透测试</category>
+      </categories>
+      <tags>
+        <tag>Kali</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>conftest.py文件使用</title>
     <url>/2023/05/28/conftest.py%E6%96%87%E4%BB%B6%E4%BD%BF%E7%94%A8/</url>
     <content><![CDATA[<p>一、conftest.py<br />1、confest.py是专门用于存放fixtrue的配置文件，名称固定<br />2、在conftest.py文件中的所有方法在调用时都不需要导包<br />3、conftest.py文件可以有多个，且多个conftest.py文件里面的多个fixtrue可以被一个用例调用<br />可分层管理，<br />二、前后置<br />1、基本的前后置</p>
@@ -381,70 +426,6 @@
       </tags>
   </entry>
   <entry>
-    <title>linux-查看文件</title>
-    <url>/2023/03/24/%E6%9F%A5%E7%9C%8B%E6%96%87%E4%BB%B6/</url>
-    <content><![CDATA[<p><strong>cat:由第一行开始显示文件的全部内容（直接显示，不可分页，适用于查看内容少的文件）。</strong><br /><strong>tac:从最后一行开始显示，是cat的倒写形式。</strong><br /><strong>nl:显示时输出行号</strong><br /><strong>more:一页页地显示打印在终端，（b显示上一页，空格显示下一页），翻到最后一页直接跳出文件</strong><br /><strong>less:与more类似，但不打印在终端，支持翻页,适用内容多的文件</strong><br /><strong>head:只看头几行</strong><br /><strong>tail:只看末尾几行</strong><br /><strong>od:以二进制的方式读取文件内容</strong></p>
-<p><a name="TV4xD"></a></p>
-<h3 id="1、直接查看文件内容cat、tac、nl"><a href="#1、直接查看文件内容cat、tac、nl" class="headerlink" title="1、直接查看文件内容cat、tac、nl"></a>1、直接查看文件内容cat、tac、nl</h3><p><strong>cat [参数] [文件]</strong><br />参数：</p>
-<table>
-<thead>
-<tr>
-<th>-b</th>
-<th>忽略空白行显示行号</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>-n</td>
-<td>空白行也显示行号</td>
-</tr>
-</tbody></table>
-<p><strong>tac [参数] [文件] 从后往前依次打印</strong><br /><strong>nl [参数] [文件] 添加行号显示</strong><br />参数：</p>
-<table>
-<thead>
-<tr>
-<th>-b<br />(指定行号是否要忽略空白行)</th>
-<th>a</th>
-<th>空白行也显示行号（类似cat -n）</th>
-</tr>
-</thead>
-<tbody><tr>
-<td></td>
-<td>t</td>
-<td>空白行不显示行号，即跳过空白行继续往下计行数（默认值）</td>
-</tr>
-<tr>
-<td>-n<br />(列出行号表示 的方法)</td>
-<td>ln</td>
-<td>行号显示在最左方</td>
-</tr>
-<tr>
-<td></td>
-<td>rn</td>
-<td>行号在自己字段的最右方显示，且不加0</td>
-</tr>
-<tr>
-<td></td>
-<td>rz</td>
-<td>行号在自己字段的最右方显示，且加0</td>
-</tr>
-</tbody></table>
-<p><a name="WATZL"></a></p>
-<h2 id="2、可翻页查看more、less"><a href="#2、可翻页查看more、less" class="headerlink" title="2、可翻页查看more、less"></a>2、可翻页查看more、less</h2><p><strong>more</strong>:一页一页地翻动，<br />运行过程中的操作：<br />空格键：下一页<br /><strong>b</strong>:上一页，对文件有用，对管道无用<br /><strong>Enter</strong>：向下滚动一行<br /><strong>&#x2F;字符串</strong>：<strong>向下</strong>查询“字符串”这个关键字<br /><strong>:f</strong>：显示出文件名及目前显示的行数<br />q:退出</p>
-<p><strong>less:less用用法比more更加弹性，拥有的查询功能更多；可向上查询，向下查询</strong><br /><strong>操作：</strong><br /><strong>空格键     ：下一页</strong><br /><strong>b 	        ：上一页</strong><br /><strong>&#x2F;字符串   ：向下查询“字符串”</strong><br /><strong>？字符串 ：向上查询“字符串”</strong><br /><strong>n		:重复前一个查询（与&#x2F;或？有关）</strong><br /><strong>N  		:反向重复前一个查询（与&#x2F;或？有关）</strong><br /><strong>q		:退出</strong><br><a name="DLXmM"></a></p>
-<h2 id="3、数据选取head、tail"><a href="#3、数据选取head、tail" class="headerlink" title="3、数据选取head、tail"></a>3、数据选取head、tail</h2><p>head和tail都是以“行”为单位进行数据选取的<br /><strong>head [参数] [文件]：查看文件头几行的内容，默认查看前10行</strong><br />参数：**-n &lt;数字&gt;**</p>
-<p><strong>tail [参数] [文件]<strong>：查看文件后面几行的内容，默认查看文件后10行的内容<br />参数：<br /></strong>    -n &lt;数字&gt;</strong> ，代表显示几行<br />   ** -f** 表示持续检测文件，按下Ctrl+c结束读取（我的是**-F**才能实时刷新，centos7）<br />   ** -c &lt;数字&gt;**，表示显示的字节数<br />    -q 不显示处理信息<br />    -v 显示详细的处理信息<br />    –pid&#x3D;PID 与-f合用,表示在进程ID,PID死掉之后结束<br />    -q, –quiet, –silent 从不输出给出文件名的首部<br />    -s, –sleep-interval&#x3D;S 与-f合用,表示在每次反复的间隔休眠S秒<br><a name="nnPqu"></a></p>
-<h2 id="4、非纯文本文件：od"><a href="#4、非纯文本文件：od" class="headerlink" title="4、非纯文本文件：od"></a>4、非纯文本文件：od</h2><p>od [-t 类型]  [文件]<br />类型：<br />a:<br />c:<br />d[size]:利用十进制(decimal)输出数据，每个整数占用size bytes;<br />f[size]:利用浮点数(decimal)输出数据，每个整数占用size bytes;<br />o[size]:利用八进制(decimal)输出数据，每个整数占用size bytes;<br />x[size]:利用十六进制(decimal)输出数据，每个整数占用size bytes;</p>
-<p>实操：<br /><img src="https://cdn.nlark.com/yuque/0/2022/png/25987745/1646654882082-00f07ff0-464b-4ee4-8e55-b0c25ec3aaa0.png#averageHue=%23f8f4f4&clientId=u581b7dae-b671-4&from=paste&height=431&id=ue8d693f0&originHeight=656&originWidth=606&originalType=binary&ratio=1&rotation=0&showTitle=false&size=71448&status=done&style=none&taskId=u51ffe886-0b88-4f1d-b0db-dd4b72efe50&title=&width=398" alt="image.png"></p>
-<p>**tail -c 10 test.txt **<br />注：数字、字母、空格占1个字节<br /><img src="https://cdn.nlark.com/yuque/0/2022/png/25987745/1646654748314-e9898686-c2e4-44ee-b984-ccb1edf04fce.png#averageHue=%23fdf6f5&clientId=u581b7dae-b671-4&from=paste&height=242&id=u4cfc8f7a&originHeight=270&originWidth=520&originalType=binary&ratio=1&rotation=0&showTitle=false&size=19828&status=done&style=none&taskId=u0ccdbc68-0fcf-420e-8a8f-db8995ea468&title=&width=467" alt="image.png"><br /><strong>tail -n +20 test.txt</strong> （注意有个+号，表示正序第20行开始到结尾的内容）<br /><img src="https://cdn.nlark.com/yuque/0/2022/png/25987745/1646655385328-20dd8096-aa89-475e-a795-4a5d14554f0c.png#averageHue=%23fefefe&clientId=u581b7dae-b671-4&from=paste&height=151&id=ufe077982&originHeight=153&originWidth=508&originalType=binary&ratio=1&rotation=0&showTitle=false&size=5466&status=done&style=none&taskId=u165108b5-6431-42ee-9ca8-ab47771166f&title=&width=500" alt="image.png"><br /><strong>tail -n 20 test.txt</strong> （倒数20行的内容）<br /><img src="https://cdn.nlark.com/yuque/0/2022/png/25987745/1646655491866-0633a99f-e9ae-4846-b54b-8c1ebed8d0a7.png#averageHue=%23fdfdfd&clientId=u581b7dae-b671-4&from=paste&height=335&id=ub8bfa4c4&originHeight=409&originWidth=519&originalType=binary&ratio=1&rotation=0&showTitle=false&size=15175&status=done&style=none&taskId=u690d65ae-7191-4025-a9f8-6d4003ae64d&title=&width=425.5" alt="image.png"></p>
-]]></content>
-      <categories>
-        <category>软件测试</category>
-      </categories>
-      <tags>
-        <tag>Linux</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>生成测试报告</title>
     <url>/2023/07/13/%E7%94%9F%E6%88%90%E6%B5%8B%E8%AF%95%E6%8A%A5%E5%91%8A/</url>
     <content><![CDATA[<p>1、第一种：生成pytest内置报告，输入<br />pytest -vs –html .&#x2F;reports&#x2F;result.html<br />生成result.html文件<br />2、第二种：生成allure报告 <br />生成报告：allure serve reports&#x2F;allure_raw<br />开启服务查看报告：allure serve reports&#x2F;allure_raw</p>
@@ -530,6 +511,70 @@
       </tags>
   </entry>
   <entry>
+    <title>linux-查看文件</title>
+    <url>/2023/03/24/%E6%9F%A5%E7%9C%8B%E6%96%87%E4%BB%B6/</url>
+    <content><![CDATA[<p><strong>cat:由第一行开始显示文件的全部内容（直接显示，不可分页，适用于查看内容少的文件）。</strong><br /><strong>tac:从最后一行开始显示，是cat的倒写形式。</strong><br /><strong>nl:显示时输出行号</strong><br /><strong>more:一页页地显示打印在终端，（b显示上一页，空格显示下一页），翻到最后一页直接跳出文件</strong><br /><strong>less:与more类似，但不打印在终端，支持翻页,适用内容多的文件</strong><br /><strong>head:只看头几行</strong><br /><strong>tail:只看末尾几行</strong><br /><strong>od:以二进制的方式读取文件内容</strong></p>
+<p><a name="TV4xD"></a></p>
+<h3 id="1、直接查看文件内容cat、tac、nl"><a href="#1、直接查看文件内容cat、tac、nl" class="headerlink" title="1、直接查看文件内容cat、tac、nl"></a>1、直接查看文件内容cat、tac、nl</h3><p><strong>cat [参数] [文件]</strong><br />参数：</p>
+<table>
+<thead>
+<tr>
+<th>-b</th>
+<th>忽略空白行显示行号</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-n</td>
+<td>空白行也显示行号</td>
+</tr>
+</tbody></table>
+<p><strong>tac [参数] [文件] 从后往前依次打印</strong><br /><strong>nl [参数] [文件] 添加行号显示</strong><br />参数：</p>
+<table>
+<thead>
+<tr>
+<th>-b<br />(指定行号是否要忽略空白行)</th>
+<th>a</th>
+<th>空白行也显示行号（类似cat -n）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td></td>
+<td>t</td>
+<td>空白行不显示行号，即跳过空白行继续往下计行数（默认值）</td>
+</tr>
+<tr>
+<td>-n<br />(列出行号表示 的方法)</td>
+<td>ln</td>
+<td>行号显示在最左方</td>
+</tr>
+<tr>
+<td></td>
+<td>rn</td>
+<td>行号在自己字段的最右方显示，且不加0</td>
+</tr>
+<tr>
+<td></td>
+<td>rz</td>
+<td>行号在自己字段的最右方显示，且加0</td>
+</tr>
+</tbody></table>
+<p><a name="WATZL"></a></p>
+<h2 id="2、可翻页查看more、less"><a href="#2、可翻页查看more、less" class="headerlink" title="2、可翻页查看more、less"></a>2、可翻页查看more、less</h2><p><strong>more</strong>:一页一页地翻动，<br />运行过程中的操作：<br />空格键：下一页<br /><strong>b</strong>:上一页，对文件有用，对管道无用<br /><strong>Enter</strong>：向下滚动一行<br /><strong>&#x2F;字符串</strong>：<strong>向下</strong>查询“字符串”这个关键字<br /><strong>:f</strong>：显示出文件名及目前显示的行数<br />q:退出</p>
+<p><strong>less:less用用法比more更加弹性，拥有的查询功能更多；可向上查询，向下查询</strong><br /><strong>操作：</strong><br /><strong>空格键     ：下一页</strong><br /><strong>b 	        ：上一页</strong><br /><strong>&#x2F;字符串   ：向下查询“字符串”</strong><br /><strong>？字符串 ：向上查询“字符串”</strong><br /><strong>n		:重复前一个查询（与&#x2F;或？有关）</strong><br /><strong>N  		:反向重复前一个查询（与&#x2F;或？有关）</strong><br /><strong>q		:退出</strong><br><a name="DLXmM"></a></p>
+<h2 id="3、数据选取head、tail"><a href="#3、数据选取head、tail" class="headerlink" title="3、数据选取head、tail"></a>3、数据选取head、tail</h2><p>head和tail都是以“行”为单位进行数据选取的<br /><strong>head [参数] [文件]：查看文件头几行的内容，默认查看前10行</strong><br />参数：**-n &lt;数字&gt;**</p>
+<p><strong>tail [参数] [文件]<strong>：查看文件后面几行的内容，默认查看文件后10行的内容<br />参数：<br /></strong>    -n &lt;数字&gt;</strong> ，代表显示几行<br />   ** -f** 表示持续检测文件，按下Ctrl+c结束读取（我的是**-F**才能实时刷新，centos7）<br />   ** -c &lt;数字&gt;**，表示显示的字节数<br />    -q 不显示处理信息<br />    -v 显示详细的处理信息<br />    –pid&#x3D;PID 与-f合用,表示在进程ID,PID死掉之后结束<br />    -q, –quiet, –silent 从不输出给出文件名的首部<br />    -s, –sleep-interval&#x3D;S 与-f合用,表示在每次反复的间隔休眠S秒<br><a name="nnPqu"></a></p>
+<h2 id="4、非纯文本文件：od"><a href="#4、非纯文本文件：od" class="headerlink" title="4、非纯文本文件：od"></a>4、非纯文本文件：od</h2><p>od [-t 类型]  [文件]<br />类型：<br />a:<br />c:<br />d[size]:利用十进制(decimal)输出数据，每个整数占用size bytes;<br />f[size]:利用浮点数(decimal)输出数据，每个整数占用size bytes;<br />o[size]:利用八进制(decimal)输出数据，每个整数占用size bytes;<br />x[size]:利用十六进制(decimal)输出数据，每个整数占用size bytes;</p>
+<p>实操：<br /><img src="https://cdn.nlark.com/yuque/0/2022/png/25987745/1646654882082-00f07ff0-464b-4ee4-8e55-b0c25ec3aaa0.png#averageHue=%23f8f4f4&clientId=u581b7dae-b671-4&from=paste&height=431&id=ue8d693f0&originHeight=656&originWidth=606&originalType=binary&ratio=1&rotation=0&showTitle=false&size=71448&status=done&style=none&taskId=u51ffe886-0b88-4f1d-b0db-dd4b72efe50&title=&width=398" alt="image.png"></p>
+<p>**tail -c 10 test.txt **<br />注：数字、字母、空格占1个字节<br /><img src="https://cdn.nlark.com/yuque/0/2022/png/25987745/1646654748314-e9898686-c2e4-44ee-b984-ccb1edf04fce.png#averageHue=%23fdf6f5&clientId=u581b7dae-b671-4&from=paste&height=242&id=u4cfc8f7a&originHeight=270&originWidth=520&originalType=binary&ratio=1&rotation=0&showTitle=false&size=19828&status=done&style=none&taskId=u0ccdbc68-0fcf-420e-8a8f-db8995ea468&title=&width=467" alt="image.png"><br /><strong>tail -n +20 test.txt</strong> （注意有个+号，表示正序第20行开始到结尾的内容）<br /><img src="https://cdn.nlark.com/yuque/0/2022/png/25987745/1646655385328-20dd8096-aa89-475e-a795-4a5d14554f0c.png#averageHue=%23fefefe&clientId=u581b7dae-b671-4&from=paste&height=151&id=ufe077982&originHeight=153&originWidth=508&originalType=binary&ratio=1&rotation=0&showTitle=false&size=5466&status=done&style=none&taskId=u165108b5-6431-42ee-9ca8-ab47771166f&title=&width=500" alt="image.png"><br /><strong>tail -n 20 test.txt</strong> （倒数20行的内容）<br /><img src="https://cdn.nlark.com/yuque/0/2022/png/25987745/1646655491866-0633a99f-e9ae-4846-b54b-8c1ebed8d0a7.png#averageHue=%23fdfdfd&clientId=u581b7dae-b671-4&from=paste&height=335&id=ub8bfa4c4&originHeight=409&originWidth=519&originalType=binary&ratio=1&rotation=0&showTitle=false&size=15175&status=done&style=none&taskId=u690d65ae-7191-4025-a9f8-6d4003ae64d&title=&width=425.5" alt="image.png"></p>
+]]></content>
+      <categories>
+        <category>软件测试</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>软件性能的几个主要术语</title>
     <url>/2023/02/27/%E8%BD%AF%E4%BB%B6%E6%80%A7%E8%83%BD%E7%9A%84%E5%87%A0%E4%B8%AA%E4%B8%BB%E8%A6%81%E6%9C%AF%E8%AF%AD/</url>
     <content><![CDATA[<p>来源：<a href="http://www.ha97.com/5095.html">http://www.ha97.com/5095.html</a><br><a name="UsW2k"></a></p>
@@ -553,51 +598,6 @@
       </categories>
       <tags>
         <tag>jmeter</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>arp攻击</title>
-    <url>/2023/07/22/arp%E6%94%BB%E5%87%BB/</url>
-    <content><![CDATA[<p>需解决问题：</p>
-<blockquote>
-<p>1、arpsoof是什么东西？<br>2、arp攻击、arp欺骗、arp缓存表是什么？<br>3、反向欺骗是什么？<br>4、如何用arp攻击实现断网？<br>5、如何做arp攻击防御？</p>
-</blockquote>
-<p><a name="S81XL"></a></p>
-<h3 id="1、arpsoof是什么东西？"><a href="#1、arpsoof是什么东西？" class="headerlink" title="1、arpsoof是什么东西？"></a>1、arpsoof是什么东西？</h3><blockquote>
-<p>arpsoof是一款进行arp欺骗的工具，攻击者通过<strong>修改受害者arp缓存</strong>，将网关的MAC替换为攻击者的MAC，后续攻击者可截获受害者的所有发送和接收的所有数据包</p>
-</blockquote>
-<p><img src="/images/img.png" alt="img"></p>
-<p><a name="cLZMD"></a></p>
-<h3 id="2、arp攻击、arp欺骗、arp缓存表是什么？"><a href="#2、arp攻击、arp欺骗、arp缓存表是什么？" class="headerlink" title="2、arp攻击、arp欺骗、arp缓存表是什么？"></a>2、arp攻击、arp欺骗、arp缓存表是什么？</h3><p>arp缓存表：</p>
-<blockquote>
-<p>每台主机、网关都有一个ARP缓存表<br>ARP缓存表内记录了其他主机或网关的IP地址与MAC地址的对应关系<br>表中的每条记录实际上就是一个IP与MAC地址对，可以是静态的，也可以是动态的；<br>静态的记录不能被ARP应答包修改，动态的可被ARP应答包修改</p>
-</blockquote>
-<p>arp攻击：无法通信<br />arp欺骗：窃取数据</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">相关命令：</span><br><span class="line">arp -s 增加</span><br><span class="line">arp -d 删除</span><br><span class="line">arp -a 查看缓存表  <span class="comment">#这个在windows中可以查看是静态还是动态，linux中只有对应的记录</span></span><br><span class="line">netsh interface ipv4 show neighbors   <span class="comment">#windows中查看缓存表</span></span><br><span class="line">netsh interface ipv4 <span class="built_in">set</span> neighbors 网卡<span class="built_in">id</span> 目标ip 目标mac  <span class="comment">#绑定arp</span></span><br></pre></td></tr></table></figure>
-<p><a name="SUXku"></a></p>
-<h3 id="3、反向欺骗是什么？"><a href="#3、反向欺骗是什么？" class="headerlink" title="3、反向欺骗是什么？"></a>3、反向欺骗是什么？</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 正向欺骗</span></span><br><span class="line">arpsoof -i 网卡 -t 目标主机ip  目标主机网关ip</span><br><span class="line"><span class="comment"># 反射欺骗</span></span><br><span class="line">arpsoof -i 网卡 -t 目标主机网关ip  目标主机ip</span><br></pre></td></tr></table></figure>
-<p><img src="/images/img_1.png" alt="img_1"><img src="/images/img_2.png" alt="img_2"><br><a name="Q1DCO"></a></p>
-<h3 id="4、如何用arp攻击实现断网？"><a href="#4、如何用arp攻击实现断网？" class="headerlink" title="4、如何用arp攻击实现断网？"></a>4、如何用arp攻击实现断网？</h3><p>开启arp攻击后不开启路由转发，这样目标机的流量只发到攻击者的主机，不会转发到网关，也就无法得到回应，实现断网</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 两种命令 其中1表示开启 0表示关闭</span></span><br><span class="line"><span class="comment"># 第一种</span></span><br><span class="line">sysctl -w net.ipv4.ip_forward=<span class="number">1</span></span><br><span class="line"><span class="comment"># 第二种</span></span><br><span class="line">echo <span class="number">1</span> &gt; /proc/sys/net/ipv4/ip_forward   </span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看路由转发状态</span></span><br><span class="line">cat /proc/sys/net/ipv4/ip_forward </span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p><a name="weMKu"></a></p>
-<h3 id="5、如何做arp攻击防御？"><a href="#5、如何做arp攻击防御？" class="headerlink" title="5、如何做arp攻击防御？"></a>5、如何做arp攻击防御？</h3><p>法一：将网关的mac地址静态绑定（不太现实，必须主机和网关都绑定）<br />方法：</p>
-<blockquote>
-<p>1、查看网络接口信息</p>
-</blockquote>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">netsh interface ipv4 show interface</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>2、将网卡绑定</p>
-</blockquote>
-<blockquote>
-<p><strong>（1）静态绑定ARP，真实环境不太现实 必须在主机和网关双向绑定</strong><br>        —–主机上绑定—–<br>        先查看网卡的id<br>        netsh interface ipv4 show neighbors<br>        再进行绑定<br>        语法：netsh interface ipv4 set neighbors 网卡id  目标主机ip地址  目标主机mac地址<br>        示例：netsh interface ipv4 set neighbors 11 10.0.0.178 00-1a-e2-df-07-41<br>        如果是xp系统用：arp  -s  目标主机ip地址  目标主机mac地址<br>     —–网关路由器上绑定—–<br>        语法：Router(config)#arp 目的主机ip地址 目标主机mac地址 arpa 接口<br>        示例：Router(config)#arp 10.0.0.95 0013.240a.b219 arpa f0&#x2F;0<br>        —–交换机上绑定—–<br>        语法：Switch(config)#arp 目的主机ip地址 目标主机mac地址 arpa 接口<br>        示例：Switch(config)#arp 10.0.0.12 90fb.a695.4445 arpa f0&#x2F;2<br>    查看arp缓存表：arp  -a<br>    清除arp缓存表：arp  -d<br><strong>（2）安装ARP防火墙，或企业级防火墙（自带ARP防火墙功能）</strong><br>原文链接：<a href="https://blog.csdn.net/lzl10211345/article/details/126882928">https://blog.csdn.net/lzl10211345/article/details/126882928</a></p>
-</blockquote>
-<p>法二：安装ARP防火墙，或企业级防火墙（自带ARP防火墙功能）</p>
-]]></content>
-      <categories>
-        <category>渗透测试</category>
-      </categories>
-      <tags>
-        <tag>Kali</tag>
       </tags>
   </entry>
 </search>
