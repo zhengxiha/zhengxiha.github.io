@@ -17,7 +17,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"zhengxiha.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"zhengxiha.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta property="og:type" content="website">
@@ -179,6 +179,79 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://zhengxiha.github.io/2023/05/04/VMware-Kali%E7%BD%91%E7%BB%9C%E8%AE%BE%E7%BD%AE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/OIP-C.jpg">
+      <meta itemprop="name" content="xiha">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="xiha's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/05/04/VMware-Kali%E7%BD%91%E7%BB%9C%E8%AE%BE%E7%BD%AE/" class="post-title-link" itemprop="url">VMware-Kali网络设置</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-05-04 17:20:15" itemprop="dateCreated datePublished" datetime="2023-05-04T17:20:15+08:00">2023-05-04</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/" itemprop="url" rel="index"><span itemprop="name">渗透测试</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>1、桥接模式-适合设置与主机相同网段<br />2、NAT模式-适合设置与主机不同网段——这里我试过设置与主机同网段，但ip一直无法配置成功<br />3、仅主机模式-只与主机通信，不能与外网通信</p>
+<p>流程：<br />1、设置虚拟机通信模式<br /><img src="https://cdn.nlark.com/yuque/0/2023/png/25987745/1682573064373-06af4029-cd8b-4786-8f4e-02f675492407.png#averageHue=%23f4f4f3&clientId=u8e0517f7-93ec-4&from=paste&height=543&id=u86708d06&originHeight=543&originWidth=876&originalType=binary&ratio=1.25&rotation=0&showTitle=false&size=37032&status=done&style=none&taskId=u3ff15ef4-155d-47b3-8864-eacf8d4bdaa&title=&width=876" alt="image.png"><br />2、查看主机ip dns 网关信息<br /><img src="https://cdn.nlark.com/yuque/0/2023/png/25987745/1682573152019-8f183f43-b17d-4451-bcf4-f3c90cabfbd0.png#averageHue=%23e4e3e2&clientId=u8e0517f7-93ec-4&from=paste&height=711&id=u9ee36cf4&originHeight=711&originWidth=1139&originalType=binary&ratio=1.25&rotation=0&showTitle=false&size=105094&status=done&style=none&taskId=uf6d2b77a-ef92-47bb-b5e7-f0456d50ce4&title=&width=1139" alt="image.png"><br />3、按模式进行更改<br /><img src="https://cdn.nlark.com/yuque/0/2023/png/25987745/1682573280114-674a8b3d-ef46-420c-be4f-f8ea2f9375bc.png#averageHue=%23dbe2be&clientId=uee4ee051-da7b-4&from=paste&height=853&id=u2bf3b40b&originHeight=853&originWidth=1462&originalType=binary&ratio=1&rotation=0&showTitle=false&size=201870&status=done&style=none&taskId=uad3ce1bb-6801-457b-a25c-682fc8eda09&title=&width=1462" alt="image.png"><br />4、进入虚拟机内配置</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/network/interfaces</span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.nlark.com/yuque/0/2023/png/25987745/1682573505272-3922ec73-ae55-4e30-a5ab-865a18aac632.png#averageHue=%23242d3b&clientId=uee4ee051-da7b-4&from=paste&height=510&id=u271a5605&originHeight=510&originWidth=650&originalType=binary&ratio=1&rotation=0&showTitle=false&size=87335&status=done&style=none&taskId=u899bc6e4-07f1-4b55-9bdc-cb4fa0beb57&title=&width=650" alt="image.png"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/resolv.conf  #配置dns </span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.nlark.com/yuque/0/2023/png/25987745/1682575821143-21c9a374-6114-43f1-992c-349315001445.png#averageHue=%23232631&clientId=uee4ee051-da7b-4&from=paste&height=495&id=ude4d5c83&originHeight=495&originWidth=617&originalType=binary&ratio=1&rotation=0&showTitle=false&size=41251&status=done&style=none&taskId=ud10bfba3-ec43-4c4e-b628-ffefb4afcea&title=&width=617" alt="image.png"><br />以上两个文件配置完后，依次执行以下命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">systemctl stop NetworkManager   #关闭并设置为开机不启动</span><br><span class="line">systemctl disable NetworkManager		#设置为开机不启动</span><br><span class="line">systemctl restart networking         #重启kali网络服务</span><br><span class="line">ip a          #查看ip是否配置成功</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -966,7 +1039,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-count">20</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1013,7 +1086,7 @@
   <span class="author" itemprop="copyrightHolder">xiha</span>
 </div>
 <!--
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
   </div>
 -->
 
@@ -1041,7 +1114,7 @@
 <script src="/js/motion.js"></script>
 
 
-<script src="/js/schemes/pisces.js"></script>
+<script src="/js/schemes/muse.js"></script>
 
 
 <script src="/js/next-boot.js"></script>

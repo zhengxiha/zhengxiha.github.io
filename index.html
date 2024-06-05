@@ -17,7 +17,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"zhengxiha.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"zhengxiha.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta property="og:type" content="website">
@@ -325,6 +325,105 @@
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#当用例执行失败，再重新多跑2次</span></span><br><span class="line"><span class="number">1</span>、main方式</span><br><span class="line">  pytest.<span class="title function_ invoke__">main</span>([<span class="string">&#x27;-vs&#x27;</span>,<span class="string">&#x27;./testcase&#x27;</span>,<span class="string">&#x27;--reruns=2&#x27;</span>])     </span><br><span class="line"><span class="number">2</span>、命令行</span><br><span class="line">  pytest -vs ./testcase --reruns <span class="number">2</span></span><br></pre></td></tr></table></figure>
 <p><strong>-x</strong>:只要一个用例报错，测试停止<br />**–maxfail&#x3D;2 **:出现两个用例失败则停止</p>
 <p>三、用例执行顺序 <br />1、默认用例从上到下执行<br />2、改变顺序<br />第一种–使用mark标记：@pytest.mark.run(order&#x3D;num)<br />第二种–使用pytest.ini<br />a、pytest.ini中设置分组<br />b、用例前加上@pytest.mark.分组名<br />c、执行pytest -v -m “smoke”<br /><img src="https://cdn.nlark.com/yuque/0/2022/png/25987745/1658322989916-1a8670ed-4605-4de2-9aee-802e55418dfe.png#averageHue=%237f6f4b&clientId=u430eaf21-9cf6-4&from=paste&height=682&id=u8114949d&originHeight=853&originWidth=1472&originalType=binary&ratio=1&rotation=0&showTitle=false&size=164304&status=done&style=none&taskId=uda2ea360-e600-423b-94c3-6ca21c6dc0f&title=&width=1177.6" alt="image.png"></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://zhengxiha.github.io/2023/07/22/arp%E6%94%BB%E5%87%BB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/OIP-C.jpg">
+      <meta itemprop="name" content="xiha">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="xiha's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/07/22/arp%E6%94%BB%E5%87%BB/" class="post-title-link" itemprop="url">arp攻击</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-07-22 17:20:15" itemprop="dateCreated datePublished" datetime="2023-07-22T17:20:15+08:00">2023-07-22</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/" itemprop="url" rel="index"><span itemprop="name">渗透测试</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>需解决问题：</p>
+<blockquote>
+<p>1、arpsoof是什么东西？<br>2、arp攻击、arp欺骗、arp缓存表是什么？<br>3、反向欺骗是什么？<br>4、如何用arp攻击实现断网？<br>5、如何做arp攻击防御？</p>
+</blockquote>
+<p><a name="S81XL"></a></p>
+<h3 id="1、arpsoof是什么东西？"><a href="#1、arpsoof是什么东西？" class="headerlink" title="1、arpsoof是什么东西？"></a>1、arpsoof是什么东西？</h3><blockquote>
+<p>arpsoof是一款进行arp欺骗的工具，攻击者通过<strong>修改受害者arp缓存</strong>，将网关的MAC替换为攻击者的MAC，后续攻击者可截获受害者的所有发送和接收的所有数据包</p>
+</blockquote>
+<p><img src="/images/img.png" alt="img"><br><a name="cLZMD"></a></p>
+<h3 id="2、arp攻击、arp欺骗、arp缓存表是什么？"><a href="#2、arp攻击、arp欺骗、arp缓存表是什么？" class="headerlink" title="2、arp攻击、arp欺骗、arp缓存表是什么？"></a>2、arp攻击、arp欺骗、arp缓存表是什么？</h3><p>arp缓存表：</p>
+<blockquote>
+<p>每台主机、网关都有一个ARP缓存表<br>ARP缓存表内记录了其他主机或网关的IP地址与MAC地址的对应关系<br>表中的每条记录实际上就是一个IP与MAC地址对，可以是静态的，也可以是动态的；<br>静态的记录不能被ARP应答包修改，动态的可被ARP应答包修改</p>
+</blockquote>
+<p>arp攻击：无法通信<br />arp欺骗：窃取数据</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">相关命令：</span><br><span class="line">arp -s 增加</span><br><span class="line">arp -d 删除</span><br><span class="line">arp -a 查看缓存表  <span class="comment">#这个在windows中可以查看是静态还是动态，linux中只有对应的记录</span></span><br><span class="line">netsh interface ipv4 show neighbors   <span class="comment">#windows中查看缓存表</span></span><br><span class="line">netsh interface ipv4 <span class="built_in">set</span> neighbors 网卡<span class="built_in">id</span> 目标ip 目标mac  <span class="comment">#绑定arp</span></span><br></pre></td></tr></table></figure>
+<p><a name="SUXku"></a></p>
+<h3 id="3、反向欺骗是什么？"><a href="#3、反向欺骗是什么？" class="headerlink" title="3、反向欺骗是什么？"></a>3、反向欺骗是什么？</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 正向欺骗</span></span><br><span class="line">arpsoof -i 网卡 -t 目标主机ip  目标主机网关ip</span><br><span class="line"><span class="comment"># 反射欺骗</span></span><br><span class="line">arpsoof -i 网卡 -t 目标主机网关ip  目标主机ip</span><br></pre></td></tr></table></figure>
+<p><img src="/images/img_1.png" alt="img_1"><img src="/images/img_2.png" alt="img_2"><br><a name="Q1DCO"></a></p>
+<h3 id="4、如何用arp攻击实现断网？"><a href="#4、如何用arp攻击实现断网？" class="headerlink" title="4、如何用arp攻击实现断网？"></a>4、如何用arp攻击实现断网？</h3><p>开启arp攻击后不开启路由转发，这样目标机的流量只发到攻击者的主机，不会转发到网关，也就无法得到回应，实现断网</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 两种命令 其中1表示开启 0表示关闭</span></span><br><span class="line"><span class="comment"># 第一种</span></span><br><span class="line">sysctl -w net.ipv4.ip_forward=<span class="number">1</span></span><br><span class="line"><span class="comment"># 第二种</span></span><br><span class="line">echo <span class="number">1</span> &gt; /proc/sys/net/ipv4/ip_forward   </span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看路由转发状态</span></span><br><span class="line">cat /proc/sys/net/ipv4/ip_forward </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><a name="weMKu"></a></p>
+<h3 id="5、如何做arp攻击防御？"><a href="#5、如何做arp攻击防御？" class="headerlink" title="5、如何做arp攻击防御？"></a>5、如何做arp攻击防御？</h3><p>法一：将网关的mac地址静态绑定（不太现实，必须主机和网关都绑定）<br />方法：</p>
+<blockquote>
+<p>1、查看网络接口信息</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netsh interface ipv4 show interface</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>2、将网卡绑定</p>
+</blockquote>
+<blockquote>
+<p><strong>（1）静态绑定ARP，真实环境不太现实 必须在主机和网关双向绑定</strong><br>        —–主机上绑定—–<br>        先查看网卡的id<br>        netsh interface ipv4 show neighbors<br>        再进行绑定<br>        语法：netsh interface ipv4 set neighbors 网卡id  目标主机ip地址  目标主机mac地址<br>        示例：netsh interface ipv4 set neighbors 11 10.0.0.178 00-1a-e2-df-07-41<br>        如果是xp系统用：arp  -s  目标主机ip地址  目标主机mac地址<br>     —–网关路由器上绑定—–<br>        语法：Router(config)#arp 目的主机ip地址 目标主机mac地址 arpa 接口<br>        示例：Router(config)#arp 10.0.0.95 0013.240a.b219 arpa f0&#x2F;0<br>        —–交换机上绑定—–<br>        语法：Switch(config)#arp 目的主机ip地址 目标主机mac地址 arpa 接口<br>        示例：Switch(config)#arp 10.0.0.12 90fb.a695.4445 arpa f0&#x2F;2<br>    查看arp缓存表：arp  -a<br>    清除arp缓存表：arp  -d<br><strong>（2）安装ARP防火墙，或企业级防火墙（自带ARP防火墙功能）</strong><br>原文链接：<a target="_blank" rel="noopener" href="https://blog.csdn.net/lzl10211345/article/details/126882928">https://blog.csdn.net/lzl10211345/article/details/126882928</a></p>
+</blockquote>
+<p>法二：安装ARP防火墙，或企业级防火墙（自带ARP防火墙功能）</p>
 
       
     </div>
@@ -989,79 +1088,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://zhengxiha.github.io/2023/05/04/VMware-Kali%E7%BD%91%E7%BB%9C%E8%AE%BE%E7%BD%AE/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/OIP-C.jpg">
-      <meta itemprop="name" content="xiha">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="xiha's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/05/04/VMware-Kali%E7%BD%91%E7%BB%9C%E8%AE%BE%E7%BD%AE/" class="post-title-link" itemprop="url">VMware-Kali网络设置</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-05-04 17:20:15" itemprop="dateCreated datePublished" datetime="2023-05-04T17:20:15+08:00">2023-05-04</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/" itemprop="url" rel="index"><span itemprop="name">渗透测试</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>1、桥接模式-适合设置与主机相同网段<br />2、NAT模式-适合设置与主机不同网段——这里我试过设置与主机同网段，但ip一直无法配置成功<br />3、仅主机模式-只与主机通信，不能与外网通信</p>
-<p>流程：<br />1、设置虚拟机通信模式<br /><img src="https://cdn.nlark.com/yuque/0/2023/png/25987745/1682573064373-06af4029-cd8b-4786-8f4e-02f675492407.png#averageHue=%23f4f4f3&clientId=u8e0517f7-93ec-4&from=paste&height=543&id=u86708d06&originHeight=543&originWidth=876&originalType=binary&ratio=1.25&rotation=0&showTitle=false&size=37032&status=done&style=none&taskId=u3ff15ef4-155d-47b3-8864-eacf8d4bdaa&title=&width=876" alt="image.png"><br />2、查看主机ip dns 网关信息<br /><img src="https://cdn.nlark.com/yuque/0/2023/png/25987745/1682573152019-8f183f43-b17d-4451-bcf4-f3c90cabfbd0.png#averageHue=%23e4e3e2&clientId=u8e0517f7-93ec-4&from=paste&height=711&id=u9ee36cf4&originHeight=711&originWidth=1139&originalType=binary&ratio=1.25&rotation=0&showTitle=false&size=105094&status=done&style=none&taskId=uf6d2b77a-ef92-47bb-b5e7-f0456d50ce4&title=&width=1139" alt="image.png"><br />3、按模式进行更改<br /><img src="https://cdn.nlark.com/yuque/0/2023/png/25987745/1682573280114-674a8b3d-ef46-420c-be4f-f8ea2f9375bc.png#averageHue=%23dbe2be&clientId=uee4ee051-da7b-4&from=paste&height=853&id=u2bf3b40b&originHeight=853&originWidth=1462&originalType=binary&ratio=1&rotation=0&showTitle=false&size=201870&status=done&style=none&taskId=uad3ce1bb-6801-457b-a25c-682fc8eda09&title=&width=1462" alt="image.png"><br />4、进入虚拟机内配置</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/network/interfaces</span><br></pre></td></tr></table></figure>
-<p><img src="https://cdn.nlark.com/yuque/0/2023/png/25987745/1682573505272-3922ec73-ae55-4e30-a5ab-865a18aac632.png#averageHue=%23242d3b&clientId=uee4ee051-da7b-4&from=paste&height=510&id=u271a5605&originHeight=510&originWidth=650&originalType=binary&ratio=1&rotation=0&showTitle=false&size=87335&status=done&style=none&taskId=u899bc6e4-07f1-4b55-9bdc-cb4fa0beb57&title=&width=650" alt="image.png"></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/resolv.conf  #配置dns </span><br></pre></td></tr></table></figure>
-<p><img src="https://cdn.nlark.com/yuque/0/2023/png/25987745/1682575821143-21c9a374-6114-43f1-992c-349315001445.png#averageHue=%23232631&clientId=uee4ee051-da7b-4&from=paste&height=495&id=ude4d5c83&originHeight=495&originWidth=617&originalType=binary&ratio=1&rotation=0&showTitle=false&size=41251&status=done&style=none&taskId=ud10bfba3-ec43-4c4e-b628-ffefb4afcea&title=&width=617" alt="image.png"><br />以上两个文件配置完后，依次执行以下命令</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">systemctl stop NetworkManager   #关闭并设置为开机不启动</span><br><span class="line">systemctl disable NetworkManager		#设置为开机不启动</span><br><span class="line">systemctl restart networking         #重启kali网络服务</span><br><span class="line">ip a          #查看ip是否配置成功</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1133,7 +1159,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-count">20</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1180,7 +1206,7 @@
   <span class="author" itemprop="copyrightHolder">xiha</span>
 </div>
 <!--
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
   </div>
 -->
 
@@ -1208,7 +1234,7 @@
 <script src="/js/motion.js"></script>
 
 
-<script src="/js/schemes/pisces.js"></script>
+<script src="/js/schemes/muse.js"></script>
 
 
 <script src="/js/next-boot.js"></script>
