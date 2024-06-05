@@ -566,7 +566,8 @@
 <h3 id="1、arpsoof是什么东西？"><a href="#1、arpsoof是什么东西？" class="headerlink" title="1、arpsoof是什么东西？"></a>1、arpsoof是什么东西？</h3><blockquote>
 <p>arpsoof是一款进行arp欺骗的工具，攻击者通过<strong>修改受害者arp缓存</strong>，将网关的MAC替换为攻击者的MAC，后续攻击者可截获受害者的所有发送和接收的所有数据包</p>
 </blockquote>
-<p><img src="/images/img.png" alt="img"><br><a name="cLZMD"></a></p>
+<p><img src="/images/img.png" alt="img"></p>
+<p><a name="cLZMD"></a></p>
 <h3 id="2、arp攻击、arp欺骗、arp缓存表是什么？"><a href="#2、arp攻击、arp欺骗、arp缓存表是什么？" class="headerlink" title="2、arp攻击、arp欺骗、arp缓存表是什么？"></a>2、arp攻击、arp欺骗、arp缓存表是什么？</h3><p>arp缓存表：</p>
 <blockquote>
 <p>每台主机、网关都有一个ARP缓存表<br>ARP缓存表内记录了其他主机或网关的IP地址与MAC地址的对应关系<br>表中的每条记录实际上就是一个IP与MAC地址对，可以是静态的，也可以是动态的；<br>静态的记录不能被ARP应答包修改，动态的可被ARP应答包修改</p>
